@@ -12,8 +12,10 @@ git push origin main
 ### 2. Deploy via Cloudflare Dashboard
 
 1. Go to [dash.cloudflare.com](https://dash.cloudflare.com/)
-2. Click **"Workers & Pages"** → **"Create application"** → **"Pages"** → **"Connect to Git"**
-3. Select your Git provider and repository
+2. Click **"Workers & Pages"** → **"Create application"** → **"Pages"** tab
+3. **Select "Import a repository"** (NOT "Select a template" or "Drag and drop")
+4. Select your Git provider (GitHub, GitLab, or Bitbucket) and authorize Cloudflare
+5. Select your repository containing the portfolio code
 4. Configure:
    - **Project name**: `vinaygautam-portfolio`
    - **Production branch**: `main`

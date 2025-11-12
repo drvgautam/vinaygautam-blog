@@ -50,7 +50,11 @@ The `.cloudflare/pages.json` file has been created with the correct settings.
    - Click on **"Workers & Pages"** in the sidebar
    - Click **"Create application"**
    - Select **"Pages"** tab
-   - Click **"Connect to Git"**
+   - You'll see several options:
+     - ✅ **Select "Import a repository"** (This is the correct option for your Astro site)
+     - ❌ Don't use "Select a template" (for pre-built solutions)
+     - ❌ Don't use "Drag and drop your files" (for static HTML uploads)
+     - ❌ Don't use "Start with Hello World!" (for testing)
 
 3. **Connect Your Repository**
    - Select your Git provider (GitHub, GitLab, or Bitbucket)
