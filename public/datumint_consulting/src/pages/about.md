@@ -4,92 +4,169 @@ title: "About DatumInt"
 description: "DatumInt is a semantic data engineering practice. We build knowledge graphs, FAIR data pipelines, and GenAI systems that actually understand your data."
 ---
 
-<section class="section about-page">
-  <div class="wrap about-content">
-  
-  <p class="about-intro">
-    <strong>DatumInt</strong> is a semantic data engineering practice based in Trondheim, Norway.
-  </p>
+<section class="about-hero">
+  <div class="wrap">
+    <div class="about-hero-content">
+      <h1 class="about-hero-title">About DatumInt</h1>
+      <p class="about-hero-subtitle">
+        We transform raw data into <span class="text-gradient">understandable data</span> — the kind AI can reason over, reuse, and trust.
+      </p>
+    </div>
+  </div>
+</section>
 
-  <p class="about-mission">
-    The mission is simple: help organisations move from raw data to <em>understandable</em> data — the kind of data AI can reason over, reuse, and trust.
-  </p>
+<section class="about-intro-section">
+  <div class="wrap">
+    <div class="about-intro-grid">
+      <div class="about-intro-card">
+        <p class="about-intro-text">
+          <strong>DatumInt</strong> is a semantic data engineering practice based in Trondheim, Norway.
+        </p>
+        <p class="about-intro-text">
+          Our mission is simple: help organisations move from raw data to <em>understandable</em> data — the kind of data AI can reason over, reuse, and trust.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <h3 class="about-heading">What we build</h3>
+<section class="about-what-we-build">
+  <div class="wrap">
+    <div class="section-header">
+      <h2 class="section-title">What we build</h2>
+      <p class="section-description">Four core capabilities that transform how you work with data</p>
+    </div>
+    
+    <div class="capabilities-grid">
+      <div class="capability-card">
+        <div class="capability-icon">🔗</div>
+        <h3 class="capability-title">Knowledge graphs & ontologies</h3>
+        <p class="capability-description">
+          Your core concepts (assets, materials, customers, processes, regulations) become explicit, queryable, and machine-readable — not trapped in PDFs and ad-hoc spreadsheets.
+        </p>
+      </div>
+      
+      <div class="capability-card">
+        <div class="capability-icon">⚙️</div>
+        <h3 class="capability-title">FAIR data pipelines</h3>
+        <p class="capability-description">
+          We design pipelines that collect, clean, label, and publish data with metadata and lineage, so it can be found, accessed, interoperated with, and reused (FAIR).
+        </p>
+      </div>
+      
+      <div class="capability-card">
+        <div class="capability-icon">🤖</div>
+        <h3 class="capability-title">GenAI with context</h3>
+        <p class="capability-description">
+          Retrieval-augmented generation backed by a semantic layer, not a random vector dump. Answers that reference your governed sources, not hallucinations.
+        </p>
+      </div>
+      
+      <div class="capability-card">
+        <div class="capability-icon">☁️</div>
+        <h3 class="capability-title">Operational delivery</h3>
+        <p class="capability-description">
+          We ship this using open standards and cloud-native tooling (containers, Kubernetes, observability, security), so you can run it yourself — not rent it forever.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <ul class="about-list">
-    <li>
-      <strong>Knowledge graphs & ontologies</strong><br>
-      Your core concepts (assets, materials, customers, processes, regulations) become explicit, queryable, and machine-readable — not trapped in PDFs and ad-hoc spreadsheets.
-    </li>
-    <li>
-      <strong>FAIR data pipelines</strong><br>
-      We design pipelines that collect, clean, label, and publish data with metadata and lineage, so it can be found, accessed, interoperated with, and reused (FAIR).
-    </li>
-    <li>
-      <strong>GenAI with context</strong><br>
-      Retrieval-augmented generation backed by a semantic layer, not a random vector dump. Answers that reference your governed sources, not hallucinations.
-    </li>
-    <li>
-      <strong>Operational delivery</strong><br>
-      We ship this using open standards and cloud-native tooling (containers, Kubernetes, observability, security), so you can run it yourself — not rent it forever.
-    </li>
-  </ul>
+<section class="about-principles-section">
+  <div class="wrap">
+    <div class="section-header">
+      <h2 class="section-title">Our principles</h2>
+      <p class="section-description">The values that guide how we work</p>
+    </div>
+    
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-number">01</div>
+        <h3 class="principle-title">Semantics first</h3>
+        <p class="principle-description">
+          Meaning is an architectural decision, not an afterthought bolted onto dashboards.
+        </p>
+      </div>
+      
+      <div class="principle-card">
+        <div class="principle-number">02</div>
+        <h3 class="principle-title">Small, observable pipelines</h3>
+        <p class="principle-description">
+          If you can't monitor it, you can't trust it.
+        </p>
+      </div>
+      
+      <div class="principle-card">
+        <div class="principle-number">03</div>
+        <h3 class="principle-title">Open standards over lock-in</h3>
+        <p class="principle-description">
+          RDF, R2RML mappings, DCAT-style catalogs, well-documented APIs.
+        </p>
+      </div>
+      
+      <div class="principle-card">
+        <div class="principle-number">04</div>
+        <h3 class="principle-title">You own the model</h3>
+        <p class="principle-description">
+          The knowledge graph is an asset, not a subscription.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <h3 class="about-heading">Principles</h3>
+<section class="about-founder-section">
+  <div class="wrap">
+    <div class="founder-content">
+      <div class="founder-header">
+        <h2 class="section-title">Who is behind DatumInt?</h2>
+      </div>
+      
+      <div class="founder-card">
+        <div class="founder-info">
+          <h3 class="founder-name">Vinay Gautam</h3>
+          <p class="founder-role">Founder & Principal</p>
+          <p class="founder-bio">
+            DatumInt is led by <strong>Vinay Gautam</strong>, with deep expertise in semantic data infrastructure, FAIR data management, and hands-on delivery of data/ML platforms.
+          </p>
+          <p class="founder-bio">
+            Background includes semantic data infrastructure in EU research projects (materials science, industrial processes, digital twins), FAIR data management, and hands-on delivery of data/ML platforms with Kubernetes, CI/CD, and observability.
+          </p>
+          <p class="founder-bio">
+            The work sits at the intersection of data engineering, semantic web, and platform engineering.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <ol class="about-principles">
-    <li>
-      <strong>Semantics first.</strong><br>
-      Meaning is an architectural decision, not an afterthought bolted onto dashboards.
-    </li>
-    <li>
-      <strong>Small, observable pipelines.</strong><br>
-      If you can't monitor it, you can't trust it.
-    </li>
-    <li>
-      <strong>Open standards over lock-in.</strong><br>
-      RDF, R2RML mappings, DCAT-style catalogs, well-documented APIs.
-    </li>
-    <li>
-      <strong>You own the model.</strong><br>
-      The knowledge graph is an asset, not a subscription.
-    </li>
-  </ol>
-
-  <h3 class="about-heading">Who is behind DatumInt?</h3>
-
-  <p>
-    DatumInt is led by <strong>Vinay Gautam</strong>.
-  </p>
-
-  <p>
-    Background: semantic data infrastructure in EU research projects (materials science, industrial processes, digital twins), FAIR data management, and hands-on delivery of data/ML platforms with Kubernetes, CI/CD, and observability.
-  </p>
-
-  <p>
-    The work sits at the intersection of data engineering, semantic web, and platform engineering.
-  </p>
-
-  <h3 class="about-heading" id="contact">Contact</h3>
-
-  <p>
-    Want to explore a pilot, architecture review, or internal capability build-up?
-  </p>
-
-  <p>
-    Send a short note to <a href="mailto:contact@datumint.no"><strong>contact@datumint.no</strong></a> with:
-  </p>
-
-  <ul class="about-contact-list">
-    <li>what you're trying to build,</li>
-    <li>what data you already have,</li>
-    <li>where you struggle today.</li>
-  </ul>
-
-  <p>
-    We'll take it from there.
-  </p>
-
+<section class="about-contact-section" id="contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div class="contact-header">
+        <h2 class="contact-title">Let's work together</h2>
+        <p class="contact-subtitle">
+          Want to explore a pilot, architecture review, or internal capability build-up?
+        </p>
+      </div>
+      
+      <div class="contact-content">
+        <p class="contact-text">
+          Send a short note to <a href="mailto:contact@datumint.no" class="contact-email">contact@datumint.no</a> with:
+        </p>
+        
+        <ul class="contact-checklist">
+          <li>What you're trying to build</li>
+          <li>What data you already have</li>
+          <li>Where you struggle today</li>
+        </ul>
+        
+        <p class="contact-cta">
+          We'll take it from there.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
