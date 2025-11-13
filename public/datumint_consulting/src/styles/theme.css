@@ -191,6 +191,78 @@ p {
 .section {
   padding: 3rem 0;
   background-color: var(--bg-page);
+  font-family: var(--font-sans);
+}
+
+.section :global(p) {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-dim);
+  margin: 0 0 1.25rem;
+  max-width: 70ch;
+}
+
+.section :global(h1),
+.section :global(h2),
+.section :global(h3),
+.section :global(h4) {
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.section :global(h1) {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: var(--font-extrabold);
+  margin-top: 0;
+}
+
+.section :global(h2) {
+  font-size: clamp(1.75rem, 3vw, 2rem);
+  font-weight: var(--font-bold);
+  margin-top: 2.5rem;
+}
+
+.section :global(h3) {
+  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+  font-weight: var(--font-semibold);
+  margin-top: 2rem;
+}
+
+.section :global(h4) {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  margin-top: 1.5rem;
+}
+
+.section :global(strong) {
+  font-weight: var(--font-semibold);
+  color: var(--text-main);
+}
+
+.section :global(ul),
+.section :global(ol) {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+  color: var(--text-dim);
+}
+
+.section :global(li) {
+  margin: 0.5rem 0;
+  line-height: var(--leading-relaxed);
+}
+
+.section :global(a) {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.section :global(a:hover) {
+  color: var(--accent-primary-light);
 }
 
 .section-alt {
