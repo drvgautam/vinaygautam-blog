@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "compatibility_date": "2023-01-01",
+  "build": {
+    "command": "npm install && npm run build",
+    "cwd": ".",
+    "dir": "dist"
+  }
+}
+
