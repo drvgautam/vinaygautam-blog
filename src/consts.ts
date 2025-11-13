@@ -54,7 +54,7 @@ export const LINKS: Links = [
   },
   {
     TEXT: "datumint",
-    HREF: "/datumint_consulting/index.html",
+    HREF: "https://datumint.no",
   },
   { 
     TEXT: "Contact", 
