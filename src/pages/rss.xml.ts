@@ -7,10 +7,24 @@ type Context = {
 }
 
 export async function GET(context: Context) {
+	// Only get content from portfolio collections (not datumint)
 	const posts = await getCollection("blog", ({ data }) => !data.draft)
   const projects = await getCollection("projects", ({ data }) => !data.draft)
 
-  const items = [...posts, ...projects]
+  // Filter out any items that might be from datumint (extra safety check)
+  const portfolioPosts = posts.filter(post => 
+    !post.slug.includes('datumint') && 
+    !post.slug.includes('DatumInt') &&
+    !post.id.includes('datumint')
+  )
+  
+  const portfolioProjects = projects.filter(project => 
+    !project.slug.includes('datumint') && 
+    !project.slug.includes('DatumInt') &&
+    !project.id.includes('datumint')
+  )
+
+  const items = [...portfolioPosts, ...portfolioProjects]
 
   items.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 
