@@ -53,8 +53,8 @@ export const LINKS: Links = [
     HREF: "/projects", 
   },
   {
-    TEXT: "datumint",
-    HREF: "https://www.datumint.no",
+    TEXT: "DatumInt",
+    HREF: "https://datumint.no",
   },
   { 
     TEXT: "Contact", 
