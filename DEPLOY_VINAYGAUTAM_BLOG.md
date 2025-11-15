@@ -60,16 +60,46 @@
    - In your Pages project, click on **"Custom domains"** tab
    - Click **"Set up a custom domain"**
 
-2. **Add Domain**:
-   - Enter: `www.vinaygautam.com`
-   - Click **"Continue"**
+2. **Add Domains**:
+   - **First, add www subdomain**:
+     - Enter: `www.vinaygautam.com`
+     - Click **"Continue"**
+     - Cloudflare will show you the DNS record needed (CNAME for `www`)
+   
+   - **Then, optionally add root domain** (for redirect setup):
+     - Click **"Set up a custom domain"** again
+     - Enter: `vinaygautam.com` (without www)
+     - Click **"Continue"**
+     - Cloudflare may show you an A record or CNAME flattening option
+     - This allows the root domain to be accessible for redirects
 
-3. **Verify DNS**:
-   - Cloudflare will show you the DNS records needed
-   - Ensure you have a CNAME record:
-     - **Name**: `www`
-     - **Target**: Your Cloudflare Pages URL (e.g., `vinaygautam-blog.pages.dev`)
-     - **Proxy status**: Proxied (orange cloud)
+3. **Configure DNS Records**:
+   
+   You need **TWO DNS records** for the domain to work properly:
+   
+   **Record 1: CNAME for www subdomain**
+   - Go to Cloudflare Dashboard → Select domain `vinaygautam.com`
+   - Go to **"DNS"** → **"Records"**
+   - Click **"Add record"**
+   - **Type**: `CNAME`
+   - **Name**: `www`
+   - **Target**: Your Cloudflare Pages URL (e.g., `vinaygautam-blog.pages.dev`)
+   - **Proxy status**: Proxied (orange cloud) ✅
+   - Click **"Save"**
+   
+   **Record 2: A record for root domain (apex)**
+   - Still in DNS Records, click **"Add record"** again
+   - **Type**: `A`
+   - **Name**: `@` (or leave blank - represents root domain)
+   - **IPv4 address**: `192.0.2.1` (this is a placeholder - Cloudflare will handle it)
+   - **Proxy status**: Proxied (orange cloud) ✅
+   - Click **"Save"**
+   
+   **Important Note**: 
+   - The A record for the root domain is needed so that `vinaygautam.com` can be accessed (even if just to redirect to www)
+   - Cloudflare's proxy will handle the actual routing
+   - If Cloudflare shows a specific IP when adding the root domain in Pages, use that instead
+   - Alternatively, Cloudflare may automatically create this record when you add the root domain in Pages
 
 4. **SSL/TLS**:
    - Cloudflare will automatically provision an SSL certificate
