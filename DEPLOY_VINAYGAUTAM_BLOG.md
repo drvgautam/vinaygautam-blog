@@ -100,11 +100,15 @@
       - **Type**: Select `A` from dropdown
       - **Name**: Enter `@` (or leave blank - represents root domain `vinaygautam.com`)
       - **IPv4 address**: 
-        - If Cloudflare Pages showed you a specific IP when adding the root domain, use that
-        - Otherwise, you can use `192.0.2.1` as a placeholder (Cloudflare proxy will handle routing)
+        - **Option 1 (Recommended)**: When you added `vinaygautam.com` in Pages, it should have shown you a specific IP address. Use that exact IP.
+        - **Option 2**: If no IP was shown, use Cloudflare's anycast IP: `192.0.2.1`
+        - **Option 3**: Cloudflare Pages root domains typically use: `192.0.2.1` or `198.41.214.162` (these are Cloudflare's anycast IPs)
       - **Proxy status**: Make sure it's **Proxied** (orange cloud icon) ✅
+        - **Important**: The proxy status is what matters - the actual IP is less important when proxied
       - **TTL**: Leave as "Auto"
       - Click **"Save"** button
+      
+      **Note**: When you add the root domain in Pages, check the "Complete DNS setup" section - it should show you the exact IP address to use. If it doesn't show an IP, Cloudflare may be using CNAME flattening automatically.
    
    d. **Return to Pages and Verify**:
       - Go back to your Pages project → **"Custom domains"** tab
