@@ -1,5 +1,32 @@
 # Vinay Gautam - Personal Portfolio & Blog
 
+## Workflow
+
+- `develop`: day-to-day development branch. Always work and test here first.
+- `main`: production branch. Cloudflare deploys from this branch only.
+
+Typical flow:
+
+```bash
+# 1. Start from develop
+git checkout develop
+git pull origin develop
+npm run dev
+
+# 2. Commit and push your tested changes
+git add .
+git commit -m "Describe change"
+git push origin develop
+
+# 3. When ready to deploy, fast-forward main
+git checkout main
+git pull origin main --ff-only
+git merge --ff-only develop
+npm run build
+git push origin main
+```
+
+Need to roll back? Reset `main` to a prior commit (`git reset --hard <sha> && git push -f origin main`), then redeploy.
 A modern, minimalist portfolio and blog site built with [Astro Sphere](https://github.com/markhorn-dev/astro-sphere) as the base theme, heavily customized for personal use.
 
 **Live Site**: [www.vinaygautam.com](https://www.vinaygautam.com)
