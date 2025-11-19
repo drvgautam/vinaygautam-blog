@@ -22,21 +22,10 @@ const work = await Promise.all(
   })
 )
 
-function formatWorkDate(input: Date | string) {
-  if (typeof input === "string") return input
-
-  const month = input.toLocaleDateString("en-US", {
-    month: "short",
-  })
-
-  const year = new Date(input).getFullYear()
-  return `${month} ${year}`
-}
-
 function formatDateRange(start: Date | string, end: Date | string) {
-  const startStr = typeof start === "string" ? start : formatWorkDate(start)
-  const endStr = typeof end === "string" ? end : formatWorkDate(end)
-  return `${startStr} — ${endStr}`
+  const startYear = typeof start === "string" ? start : new Date(start).getFullYear()
+  const endYear = typeof end === "string" ? end : new Date(end).getFullYear()
+  return `${startYear} — ${endYear}`
 }
 ---
 
