@@ -9,9 +9,9 @@ tags:
 
 - Design
 
--writting
+- writting
 
--blog
+- blog
 
 ---
 
