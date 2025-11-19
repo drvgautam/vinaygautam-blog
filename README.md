@@ -31,7 +31,6 @@ I use this project to:
 * **SEO-optimized** (OpenGraph, Twitter Cards, JSON-LD)
 * **Dark/Light mode**, animated backgrounds
 * **Content Collections** for structured blog & project content
-* **Deployed globally via Cloudflare Pages**
 
 ---
 
@@ -41,7 +40,6 @@ I use this project to:
 * **UI:** Tailwind CSS
 * **Interactive Components:** SolidJS
 * **Content:** Markdown & MDX
-* **Deployment:** Cloudflare Pages
 * **Fonts:** Inter + Atkinson
 
 ---
@@ -58,8 +56,7 @@ This project is **heavily modified** from the original Astro Sphere theme:
 * Client-side search using a custom JSON index
 * External link integration (DatumInt consulting site)
 
-> A detailed breakdown of all customizations is available in
-> **docs/customization.md** and in my upcoming blog post.
+> A detailed breakdown of all customizations is documented in the README above.
 
 ---
 
@@ -106,7 +103,7 @@ npm run preview
 
 ---
 
-## 🚢 Deployment (Cloudflare Pages)
+## 🚢 Deployment
 
 This is a static Astro site.
 It can be deployed on any static hosting provider that supports HTML/CSS/JS output, including:
@@ -134,9 +131,7 @@ Deploy the contents of the dist/ directory to your hosting provider of choice.
 
 Additional developer docs:
 
-* **docs/customization.md** — Full theme modifications
-* **docs/workflow.md** — Branching & deployment workflow
-* **docs/content-guide.md** — How to add posts & projects
+* **[WORKFLOW.md](./WORKFLOW.md)** — Branching & deployment workflow
 
 ---
 
