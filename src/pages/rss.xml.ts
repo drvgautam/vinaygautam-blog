@@ -66,8 +66,8 @@ export async function GET(context: Context) {
     items: renderedItems,
     customData: `<language>en-us</language>
       <copyright>Copyright ${new Date().getFullYear()} ${SITE.AUTHOR}</copyright>
-      <managingEditor>${SITE.AUTHOR} (contact@datumint.no)</managingEditor>
-      <webMaster>${SITE.AUTHOR} (contact@datumint.no)</webMaster>
+      <managingEditor>${SITE.AUTHOR}</managingEditor>
+      <webMaster>${SITE.AUTHOR}</webMaster>
       <ttl>60</ttl>
       <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
       <image>

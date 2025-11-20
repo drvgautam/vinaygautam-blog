@@ -1,5 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content"
+import { SITE, SOCIALS } from "@consts"
+import { formatDate } from "@lib/utils"
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">
@@ -9,6 +11,12 @@ type Props = {
 const { entry } = Astro.props
 const { collection } = entry
 const { Content, headings } = await entry.render()
+
+// Get post URL and formatted date
+const postUrl = new URL(`/${collection}/${entry.slug}`, Astro.site).href
+const publishedDate = formatDate(entry.data.date)
+const twitterUrl = SOCIALS.find(s => s.NAME === "X")?.HREF || ""
+const linkedInUrl = SOCIALS.find(s => s.NAME === "LinkedIn")?.HREF || ""
 
 // Get the next and prev entries (modulo to wrap index)
 const items = (await getCollection(collection))
@@ -43,12 +51,104 @@ const next = items[(index + 1) % items.length]
         </details>
       )}
       <Content/>
+      
+      {/* Article Metadata Section */}
+      {collection === "blog" && (
+        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <div class="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-6">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div class="flex-1">
+                <div class="font-semibold text-black dark:text-white mb-2">{entry.data.title}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mb-4 break-all font-mono">{postUrl}</div>
+                
+                <div class="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                  <div><span class="font-medium">Author:</span> {SITE.AUTHOR}</div>
+                  <div><span class="font-medium">Published:</span> {publishedDate}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-500 mt-3">
+                    © {new Date().getFullYear()} {SITE.AUTHOR}. All rights reserved.
+                  </div>
+                </div>
+              </div>
+              
+              {/* Social sharing icons */}
+              <div class="flex items-center gap-2 sm:flex-col sm:items-end">
+                <span class="text-xs text-gray-500 dark:text-gray-500 mb-2 hidden sm:block">Share</span>
+                <div class="flex items-center gap-2">
+                  <button
+                    onclick={`navigator.clipboard.writeText('${postUrl}'); alert('Link copied to clipboard!');`}
+                    class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                    aria-label="Copy link"
+                    title="Copy link"
+                  >
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </button>
+                  {twitterUrl && (
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(entry.data.title)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                      aria-label="Share on X (Twitter)"
+                      title="Share on X"
+                    >
+                      <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </a>
+                  )}
+                  {linkedInUrl && (
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                      aria-label="Share on LinkedIn"
+                      title="Share on LinkedIn"
+                    >
+                      <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Newsletter Subscription Section */}
+      {collection === "blog" && (
+        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
+          <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-800">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold text-black dark:text-white mb-1">Enjoyed this post?</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                  Get notified when I publish new articles. No spam, unsubscribe anytime.
+                </p>
+              </div>
+              <a
+                href="/contact#newsletter"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-medium rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Subscribe
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
       </article>
     </div>
     {/* Desktop TOC - right column similar to Chirpy */}
     {headings?.length > 0 && (
       <aside class="hidden lg:block lg:col-span-3">
-        <div id="toc-panel" class="sticky top-24 z-20 w-full rounded-xl border border-black/10 dark:border-white/15 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur max-h-[calc(100vh-7rem)] overflow-auto">
+        <div id="toc-panel" class="sticky top-24 z-20 w-full rounded-xl border border-black/10 dark:border-white/15 px-4 pt-4 pb-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur max-h-[calc(100vh-7rem)] overflow-y-auto">
           <div class="text-xs tracking-wide uppercase mb-3 text-black/70 dark:text-white/70 font-semibold">Contents</div>
           <nav id="toc-nav">
             <ul class="space-y-0.5 text-sm">
@@ -101,27 +201,148 @@ const next = items[(index + 1) % items.length]
                 });
               };
               
-              // IntersectionObserver + nearest-to-top fallback for robust highlighting
-              const HEADER_OFFSET = 80; // approximate header height
+              // Improved active heading tracking - ensures all headings are tracked sequentially
+              const HEADER_OFFSET = 100;
+              let lastActiveIndex = -1;
+              
+              const updateActive = () => {
+                // Calculate position for each heading first
+                const headingData = targets.map((el, index) => {
+                  const rect = el.getBoundingClientRect();
+                  const relativeTop = rect.top - HEADER_OFFSET;
+                  return {
+                    id: el.id,
+                    index: index,
+                    top: rect.top,
+                    bottom: rect.bottom,
+                    relativeTop: relativeTop,
+                    absDistance: Math.abs(relativeTop),
+                    isPast: rect.top <= HEADER_OFFSET + 50, // Add 50px buffer for better detection
+                    isVisible: rect.top < window.innerHeight && rect.bottom > 0
+                  };
+                });
+                
+                // Strategy: Find the heading that should be active
+                // Priority: headings that have passed the offset, then closest approaching
+                let activeHeading = null;
+                
+                // Check scroll position for special cases
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const distanceFromBottom = documentHeight - scrollPosition;
+                const scrollY = window.scrollY;
+                
+                // If we're at the very top, always start with first heading
+                if (scrollY < 100 && headingData.length > 0) {
+                  activeHeading = headingData[0];
+                } else {
+                  // Find all headings that have passed the offset (with buffer)
+                  const pastHeadings = headingData.filter(h => h.isPast && h.isVisible);
+                  
+                  if (pastHeadings.length > 0) {
+                    // Use the one that passed most recently (highest top value)
+                    // This ensures we progress through headings sequentially
+                    activeHeading = pastHeadings[0];
+                    for (let i = 1; i < pastHeadings.length; i++) {
+                      if (pastHeadings[i].top > activeHeading.top) {
+                        activeHeading = pastHeadings[i];
+                      }
+                    }
+                  } else {
+                    // No heading has passed yet - find the closest visible one
+                    const visibleHeadings = headingData.filter(h => h.isVisible);
+                    if (visibleHeadings.length > 0) {
+                      // Use the one closest to the offset
+                      activeHeading = visibleHeadings[0];
+                      for (let i = 1; i < visibleHeadings.length; i++) {
+                        if (visibleHeadings[i].absDistance < activeHeading.absDistance) {
+                          activeHeading = visibleHeadings[i];
+                        }
+                      }
+                    } else if (headingData.length > 0) {
+                      // Fallback: use first heading
+                      activeHeading = headingData[0];
+                    }
+                  }
+                  
+                  // Special handling for last heading: ensure it gets activated when in focus
+                  // But only if we're not at the top and there are multiple headings
+                  if (targets.length > 1 && scrollY >= 100) {
+                    const lastHeading = headingData[headingData.length - 1];
+                    const lastIndex = targets.length - 1;
+                    const secondLastIndex = targets.length > 1 ? targets.length - 2 : -1;
+                    
+                    // Check if last heading should be active
+                    const lastHeadingShouldBeActive = 
+                      // If last heading has passed the offset
+                      (lastHeading.isPast) ||
+                      // Or if we're very close to bottom (within 150px)
+                      (distanceFromBottom <= 150);
+                    
+                    if (lastHeadingShouldBeActive) {
+                      // Don't skip second-to-last if it hasn't been activated yet
+                      if (secondLastIndex >= 0 && lastActiveIndex < secondLastIndex) {
+                        const secondLastHeading = headingData[secondLastIndex];
+                        // If second-to-last is visible and hasn't passed yet, let it activate first
+                        if (secondLastHeading.isVisible && !secondLastHeading.isPast && distanceFromBottom > 150) {
+                          // Keep current activeHeading (which should be second-to-last)
+                        } else {
+                          // Second-to-last has passed or we're very close to bottom, activate last
+                          activeHeading = lastHeading;
+                        }
+                      } else {
+                        // Second-to-last has already been active, safe to activate last
+                        activeHeading = lastHeading;
+                      }
+                    }
+                  } else if (targets.length === 1) {
+                    // Special case: only one heading - activate it when it passes or near bottom
+                    if (headingData[0].isPast || distanceFromBottom <= 200) {
+                      activeHeading = headingData[0];
+                    } else {
+                      // At top, activate first (and only) heading
+                      activeHeading = headingData[0];
+                    }
+                  }
+                }
+                
+                if (activeHeading && lastActiveIndex !== activeHeading.index) {
+                  setActive(activeHeading.id);
+                  lastActiveIndex = activeHeading.index;
+                }
+              };
+              
+              // IntersectionObserver for efficient updates
               const observer = new IntersectionObserver(() => {
-                const candidates = targets.map((el) => ({ id: el.id, top: el.getBoundingClientRect().top - HEADER_OFFSET }));
-                let best = candidates[0];
-                for (const c of candidates) if (Math.abs(c.top) < Math.abs(best.top)) best = c;
-                if (best) setActive(best.id);
-              }, { rootMargin: '-10% 0px -80% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+                updateActive();
+              }, { 
+                rootMargin: '-15% 0px -15% 0px',
+                threshold: [0, 0.25, 0.5, 0.75, 1.0]
+              });
               
               targets.forEach((el) => observer.observe(el));
               
-              // Set initial active state
-              const firstVisible = targets.find(el => {
-                const rect = el.getBoundingClientRect();
-                return rect.top >= 0 && rect.top < window.innerHeight * 0.5;
+              // Scroll listener for smooth, continuous updates
+              let ticking = false;
+              const handleScroll = () => {
+                if (!ticking) {
+                  window.requestAnimationFrame(() => {
+                    updateActive();
+                    ticking = false;
+                  });
+                  ticking = true;
+                }
+              };
+              
+              window.addEventListener('scroll', handleScroll, { passive: true });
+              
+              // Handle hash changes (TOC link clicks)
+              window.addEventListener('hashchange', () => {
+                setTimeout(updateActive, 150);
               });
-              if (firstVisible) {
-                setActive(firstVisible.id);
-              } else if (targets[0]) {
-                setActive(targets[0].id);
-              }
+              
+              // Initial state
+              setTimeout(updateActive, 150);
             })();
           </script>
         </div>

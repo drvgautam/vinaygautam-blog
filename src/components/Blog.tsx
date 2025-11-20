@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content"
-import { createEffect, createMemo, createSignal, For, Show } from "solid-js"
+import { createEffect, createMemo, createSignal, For, Show, onMount } from "solid-js"
 import ArrowCard from "@components/ArrowCard"
 import { cn } from "@lib/utils"
 
@@ -15,6 +15,27 @@ export default function Blog({ data, tags }: Props) {
   const [page, setPage] = createSignal(1)
   const [isFilterOpen, setIsFilterOpen] = createSignal(false)
   const [tagQuery, setTagQuery] = createSignal("")
+
+  // Initialize filter from URL query params
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const tagParam = urlParams.get("tag")
+    if (tagParam) {
+      setFilter(new Set([tagParam]))
+    }
+  })
+
+  // Update URL when filter changes
+  createEffect(() => {
+    const url = new URL(window.location.href)
+    if (filter().size > 0) {
+      const tags = Array.from(filter())
+      url.searchParams.set("tag", tags[0])
+    } else {
+      url.searchParams.delete("tag")
+    }
+    window.history.replaceState({}, "", url.toString())
+  })
 
   createEffect(() => {
     setPosts(data.filter((entry) => 

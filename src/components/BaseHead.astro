@@ -100,8 +100,9 @@ const isHomePage = Astro.url.pathname === "/"
       "url": Astro.site
     },
     "publisher": {
-      "@type": "Person",
-      "name": SITE.AUTHOR
+      "@type": "Organization",
+      "name": SITE.TITLE,
+      "url": Astro.site
     },
     "mainEntityOfPage": {
       "@type": "WebPage",

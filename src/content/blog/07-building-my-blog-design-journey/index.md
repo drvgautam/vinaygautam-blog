@@ -5,9 +5,9 @@ date: "Jan 19 2025"
 draft: false
 tags:
 
-- Personal
+- General
 
-- Design
+- Astro
 
 - writting
 
@@ -37,7 +37,7 @@ The real story begins with a search.
 
 I spent weeks browsing themes and frameworks with a feeling I can only describe as “technical homesickness.” Everything looked polished but empty — nice surfaces, no soul.
 
-And then I found Astro Sphere.
+And then I found [Astro Sphere](https://github.com/markhorn-dev/astro-sphere).
 
 Minimal. Fast. Thoughtful. Soft around the edges.
 The kind of design that invites you to breathe instead of impress.
