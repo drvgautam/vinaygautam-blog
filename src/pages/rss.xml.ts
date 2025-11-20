@@ -71,7 +71,7 @@ export async function GET(context: Context) {
       <ttl>60</ttl>
       <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
       <image>
-        <url>${context.site}/og-image-v2.jpeg</url>
+        <url>${context.site}/og-vinay-profile.jpeg</url>
         <title>${SITE.TITLE}</title>
         <link>${context.site}</link>
         <width>1200</width>
