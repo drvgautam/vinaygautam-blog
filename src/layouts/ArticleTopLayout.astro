@@ -55,10 +55,12 @@ const repoUrl = collection === "projects" ? data.repoUrl : null
       <h1 class="text-2xl sm:text-3xl font-semibold text-black dark:text-white mt-6 sm:mt-8">
         {title}
       </h1>
-      <div class="mt-4 sm:mt-6 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-l-4 border-gray-300 dark:border-gray-700 pl-4 py-3 pr-4 rounded-r">
-        <span class="text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 mr-2" style="font-family: Georgia, 'Times New Roman', serif;">“</span>
-        <span class="italic">{summary}</span>
-        <span class="text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 ml-2" style="font-family: Georgia, 'Times New Roman', serif;">”</span>
+      <div class="mt-4 sm:mt-6 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-l-4 border-gray-300 dark:border-gray-700 pl-3 sm:pl-4 py-3 pr-3 sm:pr-4 rounded-r">
+        <div class="flex items-start gap-1 sm:gap-2">
+          <span class="text-3xl sm:text-4xl md:text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 flex-shrink-0" style="font-family: Georgia, 'Times New Roman', serif; line-height: 1;">"</span>
+          <span class="italic flex-1">{summary}</span>
+          <span class="text-3xl sm:text-4xl md:text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 flex-shrink-0 self-end" style="font-family: Georgia, 'Times New Roman', serif; line-height: 1;">"</span>
+        </div>
       </div>
       {(demoUrl || repoUrl) && 
       <div class="mt-4 flex flex-wrap gap-2">
