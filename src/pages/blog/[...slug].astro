@@ -18,10 +18,21 @@ export async function getStaticPaths() {
 // Get the requested post
 type Props = CollectionEntry<"blog">
 const post = Astro.props
-const { title, summary } = post.data
+const { title, summary, ogImage } = post.data
+
+// Construct the OG image URL
+// If ogImage is provided, use /blog/{slug}/{ogImage}
+// Otherwise, use the auto-generated placeholder image
+let imageUrl: string | undefined
+if (ogImage) {
+  imageUrl = `/blog/${post.slug}/${ogImage}`
+} else {
+  // Use auto-generated placeholder image (generated at build time)
+  imageUrl = `/blog/${post.slug}/og-image.png`
+}
 ---
 
-<PageLayout title={title} description={summary}>
+<PageLayout title={title} description={summary} image={imageUrl}>
   <TopLayout size="xl">
     <div class="animate">
       <ArticleTopLayout entry={post}/>

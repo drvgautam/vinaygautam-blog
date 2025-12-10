@@ -3,6 +3,7 @@ title: "The Story Behind My Digital Home: How This Blog Found Its Shape"
 summary: "A personal narrative about building my blog and portfolio, the experiments behind it, and the quiet decisions that shaped its identity."
 date: "Jan 19 2025"
 draft: false
+ogImage: "og-image.jpg"
 tags:
 
 - General

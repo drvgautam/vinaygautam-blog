@@ -9,7 +9,7 @@ import { SITE } from "@consts"
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-const { title, description, image = "/open-graph.jpeg" } = Astro.props
+const { title, description, image = "/og-vinay-profile.jpeg" } = Astro.props
 
 // Construct full image URL - using completely new filename to force cache refresh
 const ogImage = new URL(image, Astro.site).href
