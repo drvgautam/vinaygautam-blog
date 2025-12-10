@@ -21,14 +21,15 @@ const post = Astro.props
 const { title, summary, ogImage } = post.data
 
 // Construct the OG image URL
-// If ogImage is provided, use /blog/{slug}/{ogImage}
-// Otherwise, use the auto-generated placeholder image
+// Images are stored in content folders but served from /blog/{slug}/
+// Add cache-busting query parameter to force social media refresh
+const timestamp = new Date(post.data.date).getTime()
 let imageUrl: string | undefined
 if (ogImage) {
-  imageUrl = `/blog/${post.slug}/${ogImage}`
+  imageUrl = `/blog/${post.slug}/${ogImage}?v=${timestamp}`
 } else {
   // Use auto-generated placeholder image (generated at build time)
-  imageUrl = `/blog/${post.slug}/og-image.png`
+  imageUrl = `/blog/${post.slug}/og-image.png?v=${timestamp}`
 }
 ---
 

@@ -1,5 +1,5 @@
 import sharp from "sharp"
-import { writeFile, mkdir, readdir, readFile } from "fs/promises"
+import { writeFile, mkdir, readdir, readFile, copyFile, stat } from "fs/promises"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import matter from "gray-matter"
@@ -14,7 +14,8 @@ async function generateOGImages() {
   const contentDir = join(__dirname, "..", "src", "content", "blog")
   const blogDirs = await readdir(contentDir, { withFileTypes: true })
 
-  // Create blog directory in public if it doesn't exist
+  // Images will be stored in content folders alongside index.md
+  // Also copy them to public for serving
   const publicBlogDir = join(__dirname, "..", "public", "blog")
   await mkdir(publicBlogDir, { recursive: true })
 
@@ -36,9 +37,21 @@ async function generateOGImages() {
         continue
       }
 
-      // Skip if post already has an ogImage (user-provided)
+      // If post has custom ogImage, copy it from content to public
       if (data.ogImage) {
-        console.log(`Skipping ${slug} - has custom ogImage`)
+        const contentImagePath = join(postDir, data.ogImage)
+        try {
+          // Check if image exists in content folder
+          await stat(contentImagePath)
+          // Copy to public folder
+          const publicPostDir = join(publicBlogDir, slug)
+          await mkdir(publicPostDir, { recursive: true })
+          const publicImagePath = join(publicPostDir, data.ogImage)
+          await copyFile(contentImagePath, publicImagePath)
+          console.log(`Copied custom OG image for ${slug}`)
+        } catch (error) {
+          console.warn(`Custom OG image not found for ${slug}: ${data.ogImage}`)
+        }
         continue
       }
 
@@ -49,9 +62,7 @@ async function generateOGImages() {
         continue
       }
 
-      // Create directory for this post's OG image
-      const postPublicDir = join(publicBlogDir, slug)
-      await mkdir(postPublicDir, { recursive: true })
+      // Images are stored in the same directory as index.md
 
       // Create SVG with blog title
       const svg = `
@@ -103,9 +114,15 @@ async function generateOGImages() {
         .png()
         .toBuffer()
 
-      // Write to public/blog/{slug}/og-image.png
-      const outputPath = join(postPublicDir, "og-image.png")
-      await writeFile(outputPath, pngBuffer)
+      // Write to src/content/blog/{slug}/og-image.png (same folder as index.md)
+      const contentImagePath = join(postDir, "og-image.png")
+      await writeFile(contentImagePath, pngBuffer)
+
+      // Also copy to public/blog/{slug}/ for serving
+      const publicPostDir = join(publicBlogDir, slug)
+      await mkdir(publicPostDir, { recursive: true })
+      const publicImagePath = join(publicPostDir, "og-image.png")
+      await copyFile(contentImagePath, publicImagePath)
 
       console.log(`Generated OG image for ${slug}`)
     } catch (error) {
