@@ -11,7 +11,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 const { title, description, image = "/og-vinay-profile.jpeg" } = Astro.props
 
-// Construct full image URL - using completely new filename to force cache refresh
+// Construct full absolute image URL
+// Ensure it's always an absolute URL for social media platforms
 const ogImage = new URL(image, Astro.site).href
 const isHomePage = Astro.url.pathname === "/"
 ---
