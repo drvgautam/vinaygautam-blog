@@ -37,21 +37,37 @@ async function generateOGImages() {
         continue
       }
 
-      // If post has custom ogImage, copy it from content to public
+      // Copy custom ogImage and bannerImage from content to public
+      const publicPostDir = join(publicBlogDir, slug)
+      await mkdir(publicPostDir, { recursive: true })
+      
       if (data.ogImage) {
         const contentImagePath = join(postDir, data.ogImage)
         try {
-          // Check if image exists in content folder
           await stat(contentImagePath)
-          // Copy to public folder
-          const publicPostDir = join(publicBlogDir, slug)
-          await mkdir(publicPostDir, { recursive: true })
           const publicImagePath = join(publicPostDir, data.ogImage)
           await copyFile(contentImagePath, publicImagePath)
           console.log(`Copied custom OG image for ${slug}`)
         } catch (error) {
           console.warn(`Custom OG image not found for ${slug}: ${data.ogImage}`)
         }
+      }
+      
+      // Copy banner image if it exists
+      if (data.bannerImage) {
+        const bannerImagePath = join(postDir, data.bannerImage)
+        try {
+          await stat(bannerImagePath)
+          const publicBannerPath = join(publicPostDir, data.bannerImage)
+          await copyFile(bannerImagePath, publicBannerPath)
+          console.log(`Copied banner image for ${slug}`)
+        } catch (error) {
+          console.warn(`Banner image not found for ${slug}: ${data.bannerImage}`)
+        }
+      }
+      
+      // Skip generating placeholder if custom ogImage exists
+      if (data.ogImage) {
         continue
       }
 
@@ -119,8 +135,7 @@ async function generateOGImages() {
       await writeFile(contentImagePath, pngBuffer)
 
       // Also copy to public/blog/{slug}/ for serving
-      const publicPostDir = join(publicBlogDir, slug)
-      await mkdir(publicPostDir, { recursive: true })
+      // publicPostDir already declared above
       const publicImagePath = join(publicPostDir, "og-image.png")
       await copyFile(contentImagePath, publicImagePath)
 

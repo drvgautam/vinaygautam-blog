@@ -4,6 +4,8 @@ summary: "A personal narrative about building my blog and portfolio, the experim
 date: "Jan 19 2025"
 draft: false
 ogImage: "og-image.jpg"
+bannerImage: "banner.jpg"
+bannerCaption: "Photo by [Photographer Name](https://unsplash.com/@username) on [Unsplash](https://unsplash.com)"
 tags:
 
 - General

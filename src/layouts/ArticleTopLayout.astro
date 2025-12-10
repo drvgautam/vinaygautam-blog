@@ -12,6 +12,10 @@ const { title, summary, date } = data
 
 const demoUrl = collection === "projects" ? data.demoUrl : null
 const repoUrl = collection === "projects" ? data.repoUrl : null
+
+// Get banner image and caption for blog posts
+const bannerImage = collection === "blog" ? data.bannerImage : null
+const bannerCaption = collection === "blog" ? data.bannerCaption : null
 ---
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -55,6 +59,20 @@ const repoUrl = collection === "projects" ? data.repoUrl : null
       <h1 class="text-2xl sm:text-3xl font-semibold text-black dark:text-white mt-6 sm:mt-8">
         {title}
       </h1>
+      {bannerImage && (
+        <figure class="mt-6 sm:mt-8">
+          <img 
+            src={`/${collection}/${entry.slug}/${bannerImage}`}
+            alt={bannerCaption || title}
+            class="w-full h-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-800"
+          />
+          {bannerCaption && (
+            <figcaption class="mt-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 italic text-center leading-relaxed">
+              {bannerCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
       <div class="mt-4 sm:mt-6 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 border-l-4 border-gray-300 dark:border-gray-700 pl-4 py-3 pr-4 rounded-r">
         <span class="text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 mr-2" style="font-family: Georgia, 'Times New Roman', serif;">“</span>
         <span class="italic" style="line-height: 24px;">{summary}</span>
