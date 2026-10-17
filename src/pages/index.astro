@@ -23,7 +23,7 @@ const featuredProjects = [
     description:
       "Connects building models and sensor data to localise faults and surface the supporting evidence.",
     stack: "Brick Schema · Neo4j · Python",
-    href: github,
+    href: "/projects/bricklens",
   },
   {
     category: "Research data",
@@ -33,7 +33,7 @@ const featuredProjects = [
     description:
       "Helps teams describe and discover datasets through structured metadata, access workflows, and semantic search.",
     stack: "FastAPI · PostgreSQL · pgvector",
-    href: github,
+    href: "/projects/fairdatahive",
   },
 ]
 ---
@@ -103,11 +103,9 @@ const featuredProjects = [
               <p class="text-xs text-gray-500 dark:text-gray-500 mb-4">{project.stack}</p>
               <a
                 href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
               >
-                View project &amp; code ↗
+                View project &amp; code →
               </a>
             </article>
           ))}
