@@ -10,6 +10,7 @@ tags:
   - PostgreSQL
   - pgvector
 repoUrl: https://github.com/drvgautam/fairdatahive
+docsUrl: https://drvgautam.github.io/fairdatahive/
 ---
 
 **FairDataHive** helps teams describe and discover datasets through structured metadata, access workflows, and semantic search.

@@ -13,6 +13,7 @@ const { title, summary, date } = data
 const demoUrl = collection === "projects" ? data.demoUrl : null
 const repoUrl = collection === "projects" ? data.repoUrl : null
 const deckUrl = collection === "projects" ? data.deckUrl : null
+const docsUrl = collection === "projects" ? data.docsUrl : null
 const deckFilename = deckUrl ? deckUrl.split("/").pop() || "slides.pdf" : null
 
 // Get banner image and caption for blog posts
@@ -80,7 +81,7 @@ const bannerCaption = collection === "blog" ? data.bannerCaption : null
         <span class="italic" style="line-height: 24px;">{summary}</span>
         <span class="text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 ml-2" style="font-family: Georgia, 'Times New Roman', serif;">”</span>
       </div>
-      {(demoUrl || repoUrl || deckUrl) && 
+      {(demoUrl || repoUrl || deckUrl || docsUrl) && 
       <div class="mt-4 flex flex-wrap gap-2">
         {demoUrl && 
           <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
@@ -99,6 +100,16 @@ const bannerCaption = collection === "blog" ? data.bannerCaption : null
             </svg>
             <span class="text-current group-hover:text-black group-hover:dark:text-white blend">
               See Repository
+            </span>
+          </a>
+        }
+        {docsUrl && 
+          <a href={docsUrl} target="_blank" rel="noopener noreferrer" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
+            <svg class="size-4">
+              <use href="/ui.svg#book-open" class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white blend"/>
+            </svg>
+            <span class="text-current group-hover:text-black group-hover:dark:text-white blend">
+              Documentation
             </span>
           </a>
         }
