@@ -12,6 +12,7 @@ const { title, summary, date } = data
 
 const demoUrl = collection === "projects" ? data.demoUrl : null
 const repoUrl = collection === "projects" ? data.repoUrl : null
+const deckUrl = collection === "projects" ? data.deckUrl : null
 
 // Get banner image and caption for blog posts
 const bannerImage = collection === "blog" ? data.bannerImage : null
@@ -78,10 +79,10 @@ const bannerCaption = collection === "blog" ? data.bannerCaption : null
         <span class="italic" style="line-height: 24px;">{summary}</span>
         <span class="text-5xl font-bold leading-none text-gray-500 dark:text-gray-400 ml-2" style="font-family: Georgia, 'Times New Roman', serif;">”</span>
       </div>
-      {(demoUrl || repoUrl) && 
+      {(demoUrl || repoUrl || deckUrl) && 
       <div class="mt-4 flex flex-wrap gap-2">
         {demoUrl && 
-          <a href={demoUrl} target="_blank" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
+          <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
             <svg class="size-4">
               <use href="/ui.svg#globe" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend"/>
             </svg>
@@ -91,12 +92,23 @@ const bannerCaption = collection === "blog" ? data.bannerCaption : null
           </a>
         }
         {repoUrl && 
-          <a href={repoUrl} target="_blank" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
+          <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
             <svg class="size-4">
               <use href="/ui.svg#link" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend"/>
             </svg>
             <span class="text-current group-hover:text-black group-hover:dark:text-white blend">
               See Repository
+            </span>
+          </a>
+        }
+        {deckUrl && 
+          <a href={deckUrl} target="_blank" rel="noopener noreferrer" class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend">
+            <svg class="size-4 stroke-current" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6M9 12h6M9 16h4"/>
+            </svg>
+            <span class="text-current group-hover:text-black group-hover:dark:text-white blend">
+              View slides
             </span>
           </a>
         }
