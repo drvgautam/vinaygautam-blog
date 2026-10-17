@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content"
 import { SITE, SOCIALS } from "@consts"
 import { formatDate } from "@lib/utils"
+import Comments from "@components/Comments.astro"
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">
@@ -152,6 +153,9 @@ const next = items.length > 1 ? items[(index + 1) % items.length] : undefined
           </div>
         </div>
       )}
+
+      {/* Comments & reactions (Giscus) */}
+      {collection === "blog" && <Comments />}
       </article>
     </div>
     {/* Desktop TOC - right column similar to Chirpy */}

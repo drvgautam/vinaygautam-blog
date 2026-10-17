@@ -1,0 +1,71 @@
+---
+/**
+ * Giscus comments + reactions (GitHub Discussions).
+ * Requires: public repo, Discussions enabled, and the giscus GitHub App installed.
+ * Install: https://github.com/apps/giscus/installations/new
+ */
+import { GISCUS } from "@consts"
+
+const { REPO, REPO_ID, CATEGORY, CATEGORY_ID, MAPPING } = GISCUS
+---
+
+<section
+  class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800"
+  aria-label="Comments and reactions"
+>
+  <div class="mb-6">
+    <h2 class="text-lg font-semibold text-black dark:text-white mb-1">Comments &amp; reactions</h2>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Share a thought or react. Sign in with GitHub to join the discussion.
+    </p>
+  </div>
+  <div class="giscus rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 p-3 sm:p-4 min-h-[120px]"></div>
+</section>
+
+<script
+  is:inline
+  src="https://giscus.app/client.js"
+  data-repo={REPO}
+  data-repo-id={REPO_ID}
+  data-category={CATEGORY}
+  data-category-id={CATEGORY_ID}
+  data-mapping={MAPPING}
+  data-strict="1"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="preferred_color_scheme"
+  data-lang="en"
+  data-loading="lazy"
+  crossorigin="anonymous"
+  async
+></script>
+
+<script is:inline>
+  (function () {
+    function currentTheme() {
+      return document.documentElement.classList.contains("dark") ? "dark" : "light"
+    }
+
+    function setGiscusTheme(theme) {
+      const iframe = document.querySelector("iframe.giscus-frame")
+      if (!iframe || !iframe.contentWindow) return
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: theme } } },
+        "https://giscus.app"
+      )
+    }
+
+    window.addEventListener("message", function (event) {
+      if (event.origin !== "https://giscus.app") return
+      if (event.data && event.data.giscus) setGiscusTheme(currentTheme())
+    })
+
+    new MutationObserver(function () {
+      setGiscusTheme(currentTheme())
+    }).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+  })()
+</script>

@@ -34,6 +34,16 @@ export const SEARCH: Page = {
 // Optional support link; leave empty string to hide
 export const BUY_ME_COFFEE_URL = "https://buymeacoffee.com/datumint"
 
+// Giscus (GitHub Discussions comments on blog posts)
+// Install the app on this repo: https://github.com/apps/giscus/installations/new
+export const GISCUS = {
+  REPO: "drvgautam/vinaygautam-blog",
+  REPO_ID: "R_kgDOOHXCqA",
+  CATEGORY: "Announcements",
+  CATEGORY_ID: "DIC_kwDOOHXCqM4DI0CB",
+  MAPPING: "pathname",
+} as const
+
 // Links
 export const LINKS: Links = [
   { 
