@@ -1,89 +1,96 @@
 import sharp from "sharp"
 import { writeFile, mkdir, readdir, readFile, copyFile, stat } from "fs/promises"
-import { join, dirname } from "path"
+import { join, dirname, relative } from "path"
 import { fileURLToPath } from "url"
 import matter from "gray-matter"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+/** Recursively find index.md / index.mdx under blog content */
+async function findPosts(dir, base = dir, results = []) {
+  const entries = await readdir(dir, { withFileTypes: true })
+  let hasIndex = false
+  for (const entry of entries) {
+    if (entry.isFile() && (entry.name === "index.md" || entry.name === "index.mdx")) {
+      hasIndex = true
+      results.push({
+        postDir: dir,
+        indexPath: join(dir, entry.name),
+        slug: relative(base, dir).replace(/\\/g, "/"),
+      })
+    }
+  }
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      await findPosts(join(dir, entry.name), base, results)
+    }
+  }
+  return results
+}
+
 async function generateOGImages() {
   console.log("Generating OG images for blog posts...")
 
-  // Get all blog posts from content directory
   const contentDir = join(__dirname, "..", "src", "content", "blog")
-  const blogDirs = await readdir(contentDir, { withFileTypes: true })
-
-  // Images will be stored in content folders alongside index.md
-  // Also copy them to public for serving
   const publicBlogDir = join(__dirname, "..", "public", "blog")
   await mkdir(publicBlogDir, { recursive: true })
 
-  for (const dirent of blogDirs) {
-    if (!dirent.isDirectory()) continue
+  let posts = []
+  try {
+    posts = await findPosts(contentDir)
+  } catch (error) {
+    console.log("No blog content directory yet:", error.message)
+    return
+  }
 
-    const slug = dirent.name
-    const postDir = join(contentDir, slug)
-    const indexPath = join(postDir, "index.md")
+  for (const { postDir, indexPath, slug } of posts) {
+    if (!slug) continue
 
     try {
-      // Read the markdown file
       const content = await readFile(indexPath, "utf-8")
       const { data } = matter(content)
 
-      // Skip drafts
       if (data.draft === true) {
         console.log(`Skipping ${slug} - draft`)
         continue
       }
 
-      // Copy custom ogImage and bannerImage from content to public
       const publicPostDir = join(publicBlogDir, slug)
       await mkdir(publicPostDir, { recursive: true })
-      
+
       if (data.ogImage) {
         const contentImagePath = join(postDir, data.ogImage)
         try {
           await stat(contentImagePath)
-          const publicImagePath = join(publicPostDir, data.ogImage)
-          await copyFile(contentImagePath, publicImagePath)
+          await copyFile(contentImagePath, join(publicPostDir, data.ogImage))
           console.log(`Copied custom OG image for ${slug}`)
-        } catch (error) {
+        } catch {
           console.warn(`Custom OG image not found for ${slug}: ${data.ogImage}`)
         }
       }
-      
-      // Copy banner image if it exists
+
       if (data.bannerImage) {
         const bannerImagePath = join(postDir, data.bannerImage)
         try {
           await stat(bannerImagePath)
-          const publicBannerPath = join(publicPostDir, data.bannerImage)
-          await copyFile(bannerImagePath, publicBannerPath)
+          await copyFile(bannerImagePath, join(publicPostDir, data.bannerImage))
           console.log(`Copied banner image for ${slug}`)
-        } catch (error) {
+        } catch {
           console.warn(`Banner image not found for ${slug}: ${data.bannerImage}`)
         }
       }
-      
-      // Skip generating placeholder if custom ogImage exists
-      if (data.ogImage) {
-        continue
-      }
+
+      if (data.ogImage) continue
 
       const { title, summary } = data
-
       if (!title || !summary) {
         console.log(`Skipping ${slug} - missing title or summary`)
         continue
       }
 
-      // Images are stored in the same directory as index.md
-
-      // Create SVG with blog title
       const svg = `
         <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-          <!-- Background gradient -->
           <defs>
             <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
@@ -91,33 +98,27 @@ async function generateOGImages() {
             </linearGradient>
           </defs>
           <rect width="1200" height="630" fill="url(#bg)"/>
-          
-          <!-- Title text -->
-          <text x="600" y="280" 
-                font-family="system-ui, -apple-system, sans-serif" 
-                font-size="64" 
-                font-weight="bold" 
-                fill="#ffffff" 
+          <text x="600" y="280"
+                font-family="system-ui, -apple-system, sans-serif"
+                font-size="48"
+                font-weight="bold"
+                fill="#ffffff"
                 text-anchor="middle"
                 dominant-baseline="middle">
-            ${escapeXml(title)}
+            ${escapeXml(title.length > 60 ? title.substring(0, 57) + "..." : title)}
           </text>
-          
-          <!-- Summary text (truncated if too long) -->
-          <text x="600" y="380" 
-                font-family="system-ui, -apple-system, sans-serif" 
-                font-size="32" 
-                fill="#cccccc" 
+          <text x="600" y="380"
+                font-family="system-ui, -apple-system, sans-serif"
+                font-size="28"
+                fill="#cccccc"
                 text-anchor="middle"
                 dominant-baseline="middle">
             ${escapeXml(summary.length > 80 ? summary.substring(0, 80) + "..." : summary)}
           </text>
-          
-          <!-- Author/URL at bottom -->
-          <text x="600" y="580" 
-                font-family="system-ui, -apple-system, sans-serif" 
-                font-size="24" 
-                fill="#888888" 
+          <text x="600" y="580"
+                font-family="system-ui, -apple-system, sans-serif"
+                font-size="24"
+                fill="#888888"
                 text-anchor="middle"
                 dominant-baseline="middle">
             vinaygautam.com
@@ -125,20 +126,10 @@ async function generateOGImages() {
         </svg>
       `.trim()
 
-      // Convert SVG to PNG using sharp
-      const pngBuffer = await sharp(Buffer.from(svg))
-        .png()
-        .toBuffer()
-
-      // Write to src/content/blog/{slug}/og-image.png (same folder as index.md)
+      const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer()
       const contentImagePath = join(postDir, "og-image.png")
       await writeFile(contentImagePath, pngBuffer)
-
-      // Also copy to public/blog/{slug}/ for serving
-      // publicPostDir already declared above
-      const publicImagePath = join(publicPostDir, "og-image.png")
-      await copyFile(contentImagePath, publicImagePath)
-
+      await copyFile(contentImagePath, join(publicPostDir, "og-image.png"))
       console.log(`Generated OG image for ${slug}`)
     } catch (error) {
       console.error(`Error processing ${slug}:`, error.message)
@@ -157,6 +148,4 @@ function escapeXml(unsafe) {
     .replace(/'/g, "&#039;")
 }
 
-// Run the script
 generateOGImages().catch(console.error)
-

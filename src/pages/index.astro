@@ -1,184 +1,207 @@
 ---
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
-import ArrowCard from "@components/ArrowCard"
-import StackCard from "@components/StackCard.astro"
 import { SITE, SOCIALS } from "@consts"
-import TwinklingStars from "@components/TwinklingStars.astro"
-import MeteorShower from "@components/MeteorShower.astro"
+import { isListedBlogPost } from "@lib/utils"
 
 const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+  .filter(isListedBlogPost)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
+  .slice(0, 1)
 
-const projects = (await getCollection("projects"))
-  .filter(project => !project.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
+const latestPost = posts[0]
 
+const linkedIn = SOCIALS.find((s) => s.NAME === "LinkedIn")?.HREF ?? "https://www.linkedin.com/in/vinaygautam/"
+const github = SOCIALS.find((s) => s.NAME === "Github")?.HREF ?? "https://github.com/drvgautam"
 
-const stack = [
-  { 
-    text: "Astro", 
-    icon: "astro", 
-    href: "https://astro.build" 
+const featuredProjects = [
+  {
+    category: "Knowledge systems",
+    status: "Prototype",
+    title: "BrickLens",
+    subtitle: "Semantic fault detection for buildings",
+    description:
+      "Connects building models and sensor data to localise faults and surface the supporting evidence.",
+    stack: "Brick Schema · Neo4j · Python",
+    href: github,
   },
-  { 
-    text: "Javascript", 
-    icon: "javascript", 
-    href: "https://www.javascript.com" 
-  },
-  { 
-    text: "Typescript", 
-    icon: "typescript", 
-    href: "https://www.typescriptlang.org" 
-  },
-  { 
-    text: "Tailwind", 
-    icon: "tailwind", 
-    href: "https://tailwindcss.com" 
+  {
+    category: "Research data",
+    status: "Open source",
+    title: "FairDataHive",
+    subtitle: "A FAIR research data catalogue",
+    description:
+      "Helps teams describe and discover datasets through structured metadata, access workflows, and semantic search.",
+    stack: "FastAPI · PostgreSQL · pgvector",
+    href: github,
   },
 ]
 ---
 
 <PageLayout title="Home" description={SITE.DESCRIPTION}>
+  <div class="relative bg-white dark:bg-black">
+    <div class="mx-auto max-w-[720px] px-4 sm:px-6 pb-20">
 
-  <!-- Light Mode: Particles -->
-  <div class='absolute inset-0 block dark:hidden pointer-events-none'>
-    <div id='particles1' class='fixed inset-0'></div>
-    <div id='particles2' class='fixed inset-0'></div>
-    <div id='particles3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Stars -->
-  <div class='absolute inset-0 bg-black hidden dark:block pointer-events-none'>
-    <div id='stars1' class='fixed inset-0'></div>
-    <div id='stars2' class='fixed inset-0'></div>
-    <div id='stars3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Twinkling Stars / Metors -->
-  <div id="galaxy" class="fixed inset-0 pointer-events-none">
-    <div class="hidden dark:block">
-      <TwinklingStars/>
-      <MeteorShower/>
-    </div>
-  </div>
-
-  <script is:inline src="/js/bg.js"></script>
-  
-  <!-- HERO -->
-  <section class="relative w-full min-h-[200px] sm:min-h-[250px] flex items-center pt-8 pb-8">
-    <div class="absolute inset-0 bg-gradient-to-b from-white/50 to-white dark:from-black/50 dark:to-black"></div>
-    <div class="relative z-10 w-full mx-auto max-w-[720px] px-4 sm:px-6">
-      <h1 class="text-left mb-4">
-        <span class="block text-3xl sm:text-4xl md:text-5xl font-extrabold text-black dark:text-white leading-tight">
-          Hi <span class="wave inline-block align-middle">👋</span>
-        </span>
-      </h1>
-      <p class="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 font-normal font-sans mb-4">
-        <!-- Software Developer | Data Engineer | Cloud Focussed | ML & AI Enthusiast -->
-      </p>
-    </div>
-  </section>
-
-  <div class="relative bg-white dark:bg-black pb-8">
-    <div class="mx-auto max-w-[720px] px-4 sm:px-6 space-y-8">
-
-      <!-- About Section -->
-      <section class="animate mt-[-2rem] mb-12">
-        <div class="flex flex-col gap-4 sm:gap-6">
-          <p class="text-base sm:text-lg font-normal text-black dark:text-white mb-2">
-            Welcome to my technical playground. I'm Vinay Gautam, PhD in Computer Science from NTNU, Norway. My work brings together the rigor of research and the creativity of hands-on engineering. After several years working at the crossroads of computer science, natural computing, bio-inspired AI, semantic data engineering, knowledge graphs, and research infrastructure, I've transitioned toward building practical, real-world systems that bridge research depth with engineering precision.
-          </p>
-          <p class="text-base sm:text-lg font-normal text-black dark:text-white mb-2">
-            Here, I share my personal notes, scripts, and projects spanning Linux, DevOps, self-hosted homelabs, semantic data engineering, and context-aware GenAI. My work and curiosity center on building intelligent, reliable systems — hands-on, open-source, and grounded in real data.
-          </p>
-          <p class="text-base sm:text-lg font-normal text-black dark:text-white">
-            This space serves as both a lab and a logbook: you'll find technical how-to guides, automation snippets, developer insights, and deep dives into the projects I'm working on. Whether you're a developer, researcher, or just a curious tinkerer, I hope you'll find something here that sparks your curiosity, helps you learn, or inspires your next build.
-          </p>
-          <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-4">
-            If you don't want to miss my posts, <a href="/contact#newsletter" class="text-purple-600 dark:text-purple-400 font-semibold underline hover:text-purple-700 dark:hover:text-purple-300 transition-colors">subscribe to my newsletter</a>.
-          </p>
+      {/* Hero */}
+      <section class="pt-10 sm:pt-14 pb-14 sm:pb-16">
+        <p class="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-3">
+          Hi, I'm Vinay <span class="wave inline-block" aria-hidden="true">👋</span>
+        </p>
+        <h1 class="text-3xl sm:text-4xl md:text-[2.75rem] font-bold tracking-tight text-black dark:text-white leading-[1.15] mb-5">
+          Research software engineer, focused on applied AI.
+        </h1>
+        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mb-8">
+          I build software and data systems for research. My current focus is connecting LLMs with useful data, tools, and workflows—drawing on my experience in semantic modelling and software engineering.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="#projects"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            Explore projects
+            <span aria-hidden="true">↓</span>
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-black/20 dark:border-white/25 text-black dark:text-white text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+          >
+            Get in touch
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
 
-      <!-- Blog Preview Section -->
-      <section class="animate mt-16">
-        <div class="space-y-4">
-          <div class="flex justify-between items-end">
-            <p class="font-semibold text-xl text-black dark:text-white text-left">
-              Recent blogs
-            </p>
-            <a href="/blog" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend text-base md:text-lg">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All posts
+      {/* Selected projects */}
+      <section id="projects" class="scroll-mt-24 pb-14 sm:pb-16">
+        <div class="flex items-baseline justify-between gap-4 mb-5">
+          <h2 class="text-xl sm:text-2xl font-bold text-black dark:text-white">Selected projects</h2>
+          <a
+            href={github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 whitespace-nowrap"
+          >
+            All repositories ↗
+          </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {featuredProjects.map((project) => (
+            <article class="flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-900/50 p-5 sm:p-6">
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400 font-medium">
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {project.category}
+                </div>
+                <span class="text-[11px] text-gray-500 dark:text-gray-400 shrink-0">{project.status}</span>
+              </div>
+              <h3 class="text-lg font-bold text-black dark:text-white mb-1">{project.title}</h3>
+              <p class="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">{project.subtitle}</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4 flex-1">{project.description}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-500 mb-4">{project.stack}</p>
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+              >
+                View project &amp; code ↗
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Latest writing */}
+      <section class="pb-14 sm:pb-16">
+        <div class="flex items-baseline justify-between gap-4 mb-5">
+          <h2 class="text-xl sm:text-2xl font-bold text-black dark:text-white">Latest writing</h2>
+          <a
+            href="/blog"
+            class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 whitespace-nowrap"
+          >
+            Browse the blog →
+          </a>
+        </div>
+        {latestPost ? (
+          <a
+            href={`/${latestPost.collection}/${latestPost.slug}`}
+            class="group block rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-900/50 p-5 sm:p-6 hover:border-gray-300 dark:hover:border-gray-700 transition-colors"
+          >
+            <div class="flex gap-4 items-start">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                  <span class="inline-block text-[11px] font-medium px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+                    {latestPost.data.seriesTitle === "How LLMs work" ? "LLMs, explained" : (latestPost.data.tags?.[0] ?? "Blog")}
+                  </span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">
+                    {latestPost.data.date.toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold text-black dark:text-white mb-2 group-hover:underline underline-offset-2">
+                  {latestPost.data.title}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+                  {latestPost.data.summary}
+                </p>
+                <span class="text-sm font-medium text-purple-600 dark:text-purple-400">
+                  View on the blog →
+                </span>
+              </div>
+              <span
+                class="hidden sm:flex shrink-0 size-10 rounded-full border border-gray-200 dark:border-gray-700 items-center justify-center text-gray-400 group-hover:border-purple-300 group-hover:text-purple-500 transition-colors"
+                aria-hidden="true"
+              >
+                ↗
               </span>
-            </a>
-          </div>
-          <ul class="flex flex-col gap-6 sm:gap-8">
-            {posts.map((post) => (
-              <li>
-                <a href={`/${post.collection}/${post.slug}`} class="block bg-white dark:bg-gray-900 rounded-2xl shadow p-4 sm:p-6 md:p-8 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition">
-                  <h2 class="text-lg sm:text-xl font-semibold text-black dark:text-white mb-2">{post.data.title}</h2>
-                  <div class="flex flex-wrap gap-2 mb-2">
-                    {post.data.tags && post.data.tags.map((tag) => (
-                      <span class="inline-block px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-300">{tag}</span>
-                    ))}
-                  </div>
-                  <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">{post.data.summary}</p>
-                  <div class="flex items-center gap-2 mt-4">
-                    {/* Optional: If you have author avatar, add here */}
-                    {/* <img src={post.data.authorAvatar} alt="Vinay Gautam" class="w-6 h-6 rounded-full" /> */}
-                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Vinay Gautam</span>
-                    <span class="text-xs text-gray-500">•</span>
-                    <span class="text-xs text-gray-500">{post.data.date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
+            </div>
+          </a>
+        ) : (
+          <p class="text-sm text-gray-500">No posts yet.</p>
+        )}
+      </section>
+
+      {/* Background / work summary */}
+      <section class="pb-4">
+        <h2 class="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4">A little background</h2>
+        <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+          I spent several years at <strong class="font-semibold text-black dark:text-white">NTNU</strong> and <strong class="font-semibold text-black dark:text-white">Aalto University</strong>, developing research software, data systems, and modelling tools. I hold a PhD in Computer Science from NTNU and also run <strong class="font-semibold text-black dark:text-white">DatumInt</strong>, a consulting practice focused on applied AI and data systems.
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          PhD in Computer Science · NTNU, 2017
+        </p>
+        <div class="flex flex-wrap gap-x-5 gap-y-2">
+          <a
+            href="mailto:vkg.biet@gmail.com?subject=CV%20request"
+            class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+          >
+            Request my CV ↗
+          </a>
+          <a
+            href={linkedIn}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+          >
+            Professional profile ↗
+          </a>
+          <a
+            href="https://nva.sikt.no/filter?contributor=307937"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+          >
+            Publications ↗
+          </a>
         </div>
       </section>
 
-      <!-- Project Preview Section -->
-      <section class="animate mt-12">
-        <div class="space-y-4">
-          <div class="flex justify-between items-end">
-            <p class="font-semibold text-xl text-black dark:text-white text-left">
-              Recent projects
-            </p>
-            <a href="/projects" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend text-base md:text-lg">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All projects
-              </span>
-            </a>
-          </div>
-          <ul class="space-y-4 sm:space-y-6">
-            {projects.map((project) => (
-              <li>
-                <a href={`/${project.collection}/${project.slug}`} class="block bg-white dark:bg-gray-900 rounded-2xl shadow p-4 sm:p-6 md:p-8 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition max-w-full">
-                  <h2 class="text-lg sm:text-xl font-semibold text-black dark:text-white mb-2">{project.data.title}</h2>
-                  <div class="flex flex-wrap gap-2 mb-2">
-                    {project.data.tags && project.data.tags.map((tag) => (
-                      <span class="inline-block px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-300">{tag}</span>
-                    ))}
-                  </div>
-                  <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">{project.data.summary}</p>
-                  <div class="flex items-center gap-2 mt-4">
-                    {/* Optional: If you have project avatar, add here */}
-                    {/* <img src={project.data.projectAvatar} alt="Project Avatar" class="w-6 h-6 rounded-full" /> */}
-                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Vinay Gautam</span>
-                    <span class="text-xs text-gray-500">•</span>
-                    <span class="text-xs text-gray-500">{project.data.date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
     </div>
   </div>
 </PageLayout>

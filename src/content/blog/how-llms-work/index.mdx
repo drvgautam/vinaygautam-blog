@@ -1,0 +1,30 @@
+---
+title: "How LLMs work: inside the next token"
+summary: "A six-part series that follows one sentence through tokenization, embeddings, attention, the transformer stack, and next-token prediction — with an interactive overview you can click through first."
+date: 2026-10-16
+tags:
+  - LLM
+  - How LLMs work
+  - machine learning
+draft: false
+series: how-llms-work
+seriesOrder: 0
+seriesTitle: "How LLMs work"
+---
+
+import InsideNextTokenStory from "@components/llm-guides/InsideNextTokenStory.astro"
+
+This series opens a large language model along one running sentence — *The cat sat on the* — and shows what has to happen before the next token appears. Start with the interactive overview below, then read each guide in order.
+
+<InsideNextTokenStory />
+
+## The six guides
+
+1. **[Neural networks: a function with knobs](/blog/how-llms-work/01-neural-networks)** — neurons, forward passes, and backpropagation.
+2. **[Tokenization: how text becomes numbers](/blog/how-llms-work/02-tokenization)** — tokens, vocabularies, and GPT-2’s tokenizer.
+3. **[Embeddings: giving every token a vector](/blog/how-llms-work/03-embeddings)** — lookup tables and position vectors.
+4. **[Attention: letting tokens look at each other](/blog/how-llms-work/04-attention)** — weighted context and the causal mask.
+5. **[The transformer: blocks, stacks and a model that works](/blog/how-llms-work/05-transformer)** — assembling the stack and counting parameters.
+6. **[Next-token prediction: from probabilities to text](/blog/how-llms-work/06-next-token)** — logits, softmax, temperature, top-k and top-p.
+
+Read them in order: each guide assumes the ones before it.

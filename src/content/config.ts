@@ -22,6 +22,9 @@ const blog = defineCollection({
     ogImage: z.string().optional(),
     bannerImage: z.string().optional(),
     bannerCaption: z.string().optional(),
+    series: z.string().optional(),
+    seriesOrder: z.number().optional(),
+    seriesTitle: z.string().optional(),
   }),
 })
 
@@ -47,12 +50,3 @@ const legal = defineCollection({
 })
 
 export const collections = { work, blog, projects, legal }
-
-
-export const SITE = {
-  title: "VINAY GAUTAM",  // Change this to your desired blog name
-  description: "semantic data engineering, knowledge graphs, software development, cloud, machine learning, and more",
-  author: "Vinay Gautam",
-  url: "https://drvgautam.github.io",
-};
-

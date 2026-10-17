@@ -1,0 +1,311 @@
+<div id="llm-story-fixed">
+  <style>
+    #llm-story-fixed{--ls-bg:light-dark(#fbfaf7,#191d1d);--ls-panel:light-dark(#ffffff,#202626);--ls-ink:light-dark(#202b2b,#e7eeee);--ls-dim:light-dark(#566464,#a8b7b7);--ls-line:light-dark(#d5dedd,#3c4b4b);--ls-wash:light-dark(#edf2ef,#2c3734);--ls-active:light-dark(#226f5f,#82d6bc);--ls-tint:light-dark(#e0f0e9,#283f37);--ls-contrast:light-dark(#ffffff,#142d25);--ls-gold:light-dark(#ab6419,#edb36e);--ls-gold-wash:light-dark(#f8eddd,#403529);color:var(--ls-ink);font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5;background:transparent;width:100%;}
+    #llm-story-fixed *{box-sizing:border-box}
+    #llm-story-fixed .ls-app{background:var(--ls-bg);border:1px solid var(--ls-line);border-radius:16px;overflow:clip}
+    #llm-story-fixed .ls-header{padding:20px 24px 16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    #llm-story-fixed .ls-brand{font-family:Georgia,serif;font-size:26px;font-weight:400;letter-spacing:-.5px}
+    #llm-story-fixed .ls-kicker{font-size:12px;color:var(--ls-dim);letter-spacing:.06em}
+    #llm-story-fixed button,#llm-story-fixed select{font:inherit;color:var(--ls-ink);background:var(--ls-panel);border:1px solid var(--ls-line);border-radius:7px;padding:7px 12px;min-height:36px}
+    #llm-story-fixed button:hover{background:var(--ls-wash)}
+    #llm-story-fixed button[aria-pressed="true"],#llm-story-fixed .ls-primary{background:var(--ls-ink);color:var(--ls-bg);border-color:var(--ls-ink)}
+    #llm-story-fixed button:disabled{opacity:.5;cursor:default}
+    #llm-story-fixed .ls-chapters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:0 24px 18px;gap:6px}
+    #llm-story-fixed .ls-chapter{padding:9px 8px;text-align:left;line-height:1.3;background:transparent;min-width:0}
+    #llm-story-fixed .ls-chapter span{display:block;font-size:11px;opacity:.75;margin-bottom:4px}
+    #llm-story-fixed .ls-prompt{padding:12px 24px;background:var(--ls-wash);display:flex;align-items:baseline;gap:15px;flex-wrap:wrap;border-block:1px solid var(--ls-line)}
+    #llm-story-fixed .ls-prompt-label{font-size:11px;letter-spacing:.08em;color:var(--ls-dim)}
+    #llm-story-fixed .ls-prompt-text{font-family:ui-monospace,SFMono-Regular,monospace;font-size:17px;overflow-wrap:anywhere;white-space:pre-wrap}
+    #llm-story-fixed .ls-caret{color:var(--ls-active);font-weight:500}
+    #llm-story-fixed .ls-body{display:grid;grid-template-columns:225px minmax(0,1fr)}
+    #llm-story-fixed .ls-guide{padding:25px 22px;border-right:1px solid var(--ls-line);min-width:0}
+    #llm-story-fixed .ls-guide h2{font-family:Georgia,serif;font-weight:400;font-size:23px;line-height:1.2;margin:10px 0 14px;overflow-wrap:anywhere}
+    #llm-story-fixed .ls-question{font-size:15px;margin-bottom:24px}
+    #llm-story-fixed .ls-guide-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ls-dim);margin-top:23px;margin-bottom:8px}
+    #llm-story-fixed .ls-anchor{font-size:13px;color:var(--ls-dim)}
+    #llm-story-fixed .ls-focus{padding-left:12px;border-left:2px solid var(--ls-active);font-size:13px}
+    #llm-story-fixed .ls-stage{padding:22px 22px 16px;min-width:0;background:var(--ls-panel)}
+    #llm-story-fixed .ls-breadcrumb{color:var(--ls-dim);font-size:12px;margin-bottom:10px;overflow-wrap:anywhere}
+    #llm-story-fixed .ls-stage-title{font-size:18px;font-weight:500;margin:0 0 8px}
+    #llm-story-fixed .ls-source{font-size:11px;color:var(--ls-dim);margin-bottom:18px;min-height:17px}
+    #llm-story-fixed .ls-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+    #llm-story-fixed .ls-controls label{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    #llm-story-fixed .ls-controls input{accent-color:var(--ls-active)}
+    #llm-story-fixed .ls-visual{width:100%;min-width:0}
+    #llm-story-fixed .ls-diagram{display:block;width:100%;color:var(--ls-ink);overflow:visible}
+    #llm-story-fixed .ls-diagram text{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;fill:var(--ls-ink);font-weight:400}
+    #llm-story-fixed .ls-diagram .ls-svg-dim{fill:var(--ls-dim);font-size:11px}
+    #llm-story-fixed .ls-diagram .ls-wire{stroke:var(--ls-line);stroke-width:1.5;fill:none}
+    #llm-story-fixed .ls-diagram .ls-signal{stroke:var(--ls-active);stroke-width:2;fill:none}
+    #llm-story-fixed .ls-diagram .ls-back{stroke:var(--ls-gold);stroke-width:2;fill:none;stroke-dasharray:4 4}
+    #llm-story-fixed .ls-diagram .ls-module{fill:var(--ls-wash);stroke:var(--ls-line);stroke-width:1}
+    #llm-story-fixed .ls-diagram .ls-selected{fill:var(--ls-tint);stroke:var(--ls-active);stroke-width:1}
+    #llm-story-fixed .ls-status{font-size:12px;color:var(--ls-dim);padding-top:12px;min-height:30px;overflow-wrap:anywhere}
+    #llm-story-fixed .ls-footer{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:11px 24px;border-top:1px solid var(--ls-line);font-size:11px;color:var(--ls-dim)}
+    #llm-story-fixed .ls-token-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:20px 0 10px}
+    #llm-story-fixed .ls-token{padding:8px 2px;white-space:pre-wrap;font-family:ui-monospace,monospace;min-width:0}
+    #llm-story-fixed .ls-token-id{text-align:center;font-family:ui-monospace,monospace;font-size:12px;color:var(--ls-dim);margin-top:9px}
+    #llm-story-fixed .ls-token-column{min-width:0;text-align:center}
+    #llm-story-fixed .ls-token-column button{width:100%}
+    #llm-story-fixed .ls-stage-label{font-size:12px;color:var(--ls-dim);margin-top:16px}
+    #llm-story-fixed .ls-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+    #llm-story-fixed .ls-table th,#llm-story-fixed .ls-table td{padding:9px 4px;text-align:center;border-bottom:1px solid var(--ls-line);font-weight:400}
+    #llm-story-fixed .ls-table th:first-child{width:63px;text-align:left}
+    #llm-story-fixed .ls-table .ls-row-button{padding:4px 5px;font-size:12px;min-height:30px;width:100%}
+    #llm-story-fixed .ls-table .ls-masked{color:var(--ls-dim);background:var(--ls-wash)}
+    #llm-story-fixed .ls-table .ls-hot{background:var(--ls-tint)}
+    #llm-story-fixed .ls-tensor-row{display:flex;align-items:center;gap:5px;min-width:0}
+    #llm-story-fixed .ls-cell{display:block;flex:1;height:26px;background:var(--ls-wash);border-bottom:2px solid var(--ls-line)}
+    #llm-story-fixed .ls-active-row .ls-cell{background:var(--ls-tint);border-color:var(--ls-active)}
+    #llm-story-fixed .ls-embedding-table{display:grid;grid-template-columns:80px minmax(0,1fr);align-items:center;gap:11px 14px;margin:18px 0}
+    #llm-story-fixed .ls-embedding-table button{font-family:ui-monospace,monospace;padding:6px}
+    #llm-story-fixed .ls-equation-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0;font-size:13px}
+    #llm-story-fixed .ls-shape{background:var(--ls-wash);padding:8px 11px;border-radius:5px}
+    #llm-story-fixed .ls-prob{display:grid;grid-template-columns:90px minmax(0,1fr) 58px;gap:10px;align-items:center;margin:14px 0;font-size:12px;font-variant-numeric:tabular-nums}
+    #llm-story-fixed .ls-prob-name{font-family:ui-monospace,monospace;white-space:pre}
+    #llm-story-fixed .ls-track{height:15px;background:var(--ls-wash);position:relative;min-width:0}
+    #llm-story-fixed .ls-fill{height:100%;background:var(--ls-active);transition:width .35s}
+    #llm-story-fixed .ls-fill.ls-other{background:var(--ls-line)}
+    #llm-story-fixed .ls-number{text-align:right}
+    #llm-story-fixed .ls-generation-text{font-family:ui-monospace,monospace;font-size:21px;white-space:pre-wrap;overflow-wrap:anywhere;padding:20px 0 10px}
+    #llm-story-fixed .ls-generated{color:var(--ls-active);text-decoration:underline;text-underline-offset:5px}
+    #llm-story-fixed .ls-inset-label{font-size:12px;color:var(--ls-dim);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0}
+    #llm-story-fixed .ls-small{font-size:12px;color:var(--ls-dim)}
+    @media(max-width:760px){#llm-story-fixed .ls-body{grid-template-columns:1fr}#llm-story-fixed .ls-guide{border-right:0;border-bottom:1px solid var(--ls-line);padding:17px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}#llm-story-fixed .ls-guide h2{font-size:20px;margin:6px 0}#llm-story-fixed .ls-question{font-size:13px;margin:0}#llm-story-fixed .ls-guide-label{margin-top:5px}#llm-story-fixed .ls-anchor{font-size:12px}#llm-story-fixed .ls-chapters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:450px){#llm-story-fixed .ls-header{padding:16px}#llm-story-fixed .ls-brand{font-size:23px}#llm-story-fixed .ls-chapters{padding:0 14px 14px}#llm-story-fixed .ls-prompt{padding:12px 16px;gap:4px 12px}#llm-story-fixed .ls-prompt-text{font-size:15px}#llm-story-fixed .ls-guide{display:block;padding:14px 16px}#llm-story-fixed .ls-guide-meta{display:none}#llm-story-fixed .ls-stage{padding:16px 12px}#llm-story-fixed .ls-source{margin-bottom:12px}#llm-story-fixed .ls-prob{grid-template-columns:68px minmax(0,1fr) 52px;gap:8px}#llm-story-fixed .ls-table th:first-child{width:51px}#llm-story-fixed .ls-table th,#llm-story-fixed .ls-table td{padding:7px 1px;font-size:11px}#llm-story-fixed .ls-footer{padding:10px 16px}#llm-story-fixed .ls-token-grid{gap:4px}#llm-story-fixed .ls-token{font-size:12px;padding:8px 1px}#llm-story-fixed .ls-embedding-table{grid-template-columns:64px minmax(0,1fr);gap:10px}}
+    @media(pointer:coarse){#llm-story-fixed button,#llm-story-fixed select,#llm-story-fixed .ls-table .ls-row-button{min-height:44px}#llm-story-fixed select,#llm-story-fixed input{font-size:16px}}
+    @media(prefers-reduced-motion:reduce){#llm-story-fixed .ls-fill{transition:none}}
+  </style>
+  <div class="ls-app">
+    <div class="ls-header">
+      <div><div class="ls-kicker">THE LLMs KNOW-HOW · CONCEPT PREVIEW</div><div class="ls-brand">Inside the next token</div></div>
+      <button class="cursor-interaction" type="button" data-scene="0" aria-pressed="true">Whole model</button>
+    </div>
+    <nav class="ls-chapters" aria-label="Guide chapters">
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="1" aria-pressed="false"><span>GUIDE 01</span>Learning</button>
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="2" aria-pressed="false"><span>GUIDE 02</span>Tokens</button>
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="3" aria-pressed="false"><span>GUIDE 03</span>Vectors</button>
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="4" aria-pressed="false"><span>GUIDE 04</span>Attention</button>
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="5" aria-pressed="false"><span>GUIDE 05</span>Blocks</button>
+      <button class="ls-chapter cursor-interaction" type="button" data-scene="6" aria-pressed="false"><span>GUIDE 06</span>Generation</button>
+    </nav>
+    <div class="ls-prompt"><span class="ls-prompt-label" id="ls-prompt-label">RUNNING SENTENCE</span><span class="ls-prompt-text" id="ls-prompt">The cat sat on the<span class="ls-caret"> ▏</span></span></div>
+    <div class="ls-body">
+      <aside class="ls-guide" aria-label="Reading companion">
+        <div><div class="ls-kicker" id="ls-guide-number">THE CONTINUOUS STORY</div><h2 id="ls-guide-heading">Follow a sentence through the model.</h2><div class="ls-question" id="ls-question">What has to happen before the next token appears?</div></div>
+        <div class="ls-guide-meta"><div class="ls-guide-label">Reading anchor</div><div class="ls-anchor" id="ls-anchor">Guide 5 · Stacking: the whole model</div><div class="ls-guide-label">Keep in view</div><div class="ls-focus" id="ls-focus">One stream per token. Every block updates those same streams.</div></div>
+      </aside>
+      <section class="ls-stage" aria-label="Interactive model view">
+        <div class="ls-breadcrumb" id="ls-breadcrumb">Text → model → next token → text</div>
+        <h3 class="ls-stage-title" id="ls-title">A model you can open</h3>
+        <div class="ls-source" id="ls-source">GPT-2 structure from the guides · schematic activations</div>
+        <div class="ls-visual" id="ls-visual"></div>
+        <div class="ls-controls" id="ls-controls"></div>
+        <div class="ls-status" id="ls-status" aria-live="polite"></div>
+      </section>
+    </div>
+    <div class="ls-footer"><span id="ls-footer-left">Token → vector → context → distribution → next token</span><span>Click a guide to change the view</span></div>
+  </div>
+  <script>
+  (function(){
+  function mount(){
+    const root=document.getElementById('llm-story-fixed');
+    if(!root || root.getAttribute('data-llm-ready')==='true')return;
+    const $=function(id){return root.querySelector('#'+id)};
+    const visual=$('ls-visual'),controls=$('ls-controls');
+    const required=['ls-prompt-label','ls-prompt','ls-guide-number','ls-guide-heading','ls-question','ls-anchor','ls-focus','ls-breadcrumb','ls-title','ls-source','ls-status','ls-footer-left'];
+    if(!visual || !controls || required.some(function(id){return !$(id)}))return;
+    root.setAttribute('data-llm-ready','true');
+    let lastWidth=0,resizePending=false;
+    function measuredWidth(){
+      const width=visual.getBoundingClientRect().width;
+      return Number.isFinite(width)&&width>0?Math.max(240,Math.floor(width)):300;
+    }
+    const tokens=['The',' cat',' sat',' on',' the'],ids=[464,3797,3332,319,262];
+    let scene=0,selected=4,showIds=false,spaces=true,learning=0,openBlock=false,generation='gpt2',temperature=1,turn=0,appended=false;
+    const guide=[
+      ['THE CONTINUOUS STORY','Follow a sentence through the model.','What has to happen before the next token appears?','Guide 5 · Stacking: the whole model','One stream per token. Every block updates those same streams.','Text → model → next token → text','A model you can open','GPT-2 structure from the guides · schematic activations'],
+      ['GUIDE 01 · NEURAL NETWORKS','A function with knobs','How does a wrong prediction change the weights?','Backpropagation: the chain rule, run backward','This learning rule returns inside the transformer. Generation leaves the weights fixed.','Model › block › MLP › learning arithmetic','One small learning step','Hand-computed teaching network · squared error · not GPT-2 weights'],
+      ['GUIDE 02 · TOKENIZATION','Give text an address','How does the sentence become a list of IDs?','A real tokenizer on a real sentence','An ID is a table address. Its numerical size does not encode meaning.','Generation loop › tokenizer','The same sentence, five tokens','Exact GPT-2 encoding recorded in Guide 2'],
+      ['GUIDE 03 · EMBEDDINGS','Give each token a vector','What does token 3797 give the network to compute with?','Inside an LLM: the table trains with everything else','An embedding row is fixed for a token ID. Context arrives in the blocks.','Model › embedding and position tables','An address becomes a row','GPT-2 table shapes · strips show structure, not measured values'],
+      ['GUIDE 04 · ATTENTION','Let context enter','Which earlier positions can this token draw from?','No peeking: the causal mask','A row gives one query’s weights. Future positions are blocked; the token can use itself.','Toy experiment › one attention head','Open a row of attention','Guide 4 toy: 12 word tokens, 4 dimensions, untrained attention weights'],
+      ['GUIDE 05 · TRANSFORMER','Repeat the useful parts','Where do attention and a neural network meet?','The block, assembled','Attention mixes across token positions. The same MLP works on each position separately.','Model › transformer stack','Five streams, twelve blocks','GPT-2 pre-LN structure · same shape in and out · schematic activations'],
+      ['GUIDE 06 · NEXT TOKEN','Turn scores into a choice','Why does the model not simply answer “mat”?','The running example','The last position predicts the next token. Choosing it is a separate step.','Last stream › final norm › logits › decoding','The next token is a distribution','Rounded GPT-2 probabilities recorded in Guide 6 · no live model call']
+    ];
+    function escape(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+    function button(label,action,primary){return '<button class="cursor-interaction '+(primary?'ls-primary':'')+'" type="button" data-action="'+action+'">'+label+'</button>'}
+    function text(x,y,s,cls,anchor){return '<text x="'+x+'" y="'+y+'"'+(cls?' class="'+cls+'"':'')+' text-anchor="'+(anchor||'middle')+'">'+escape(s)+'</text>'}
+    function rect(x,y,w,h,cls,r){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(r||5)+'" class="'+cls+'"/>'}
+    function path(d,cls,end){return '<path d="'+d+'" class="'+(cls||'ls-wire')+'"'+(end?' marker-end="url(#ls-arrow)"':'')+'/>'}
+    function svg(w,h,content,label){return '<svg class="ls-diagram" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+escape(label)+'"><defs><marker id="ls-arrow" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L6 3 L0 6" fill="var(--ls-active)"/></marker></defs>'+content+'</svg>'}
+    function setPrompt(){
+      let prompt='The cat sat on the',label='RUNNING SENTENCE';
+      if(scene===1){label='TEACHING EXAMPLE';prompt='x = 1     target = 2'}
+      if(scene===4){label='LOWERCASE WORD-LEVEL TOY';prompt='the cat sat on the'}
+      if(scene===6&&generation==='tiny'){label='CHARACTER-LEVEL TINYGPT';prompt='the cat '+'sat '.slice(0,turn)}
+      if(scene===6&&generation==='gpt2'&&appended)prompt+=' floor';
+      $('ls-prompt-label').textContent=label;$('ls-prompt').innerHTML=escape(prompt)+'<span class="ls-caret"> ▏</span>';
+    }
+    function overview(w){
+      const left=24,right=w-50,step=(right-left)/5,xs=tokens.map(function(_,i){return left+step*(i+.5)}),cx=(left+right)/2;
+      let s=text(12,15,'TEXT → TOKEN IDs','ls-svg-dim','start');
+      xs.forEach(function(x,i){s+=rect(x-step*.43,29,step*.86,29,i===selected?'ls-selected':'ls-module');s+=text(x,48,tokens[i].trim());s+=text(x,75,ids[i],'ls-svg-dim');s+=path('M'+x+' 82 V112',i===selected?'ls-signal':'ls-wire');});
+      s+=rect(left,99,right-left,35,'ls-module');s+=text(cx,121,'Token embeddings + positions');
+      xs.forEach(function(x,i){s+=path('M'+x+' 134 V156',i===selected?'ls-signal':'ls-wire')});
+      s+=rect(left,153,right-left,108,'ls-module');s+=text(left+10,172,'BLOCK 1','ls-svg-dim','start');
+      xs.forEach(function(x,i){s+=path('M'+x+' 183 V252',i===selected?'ls-signal':'ls-wire');s+=rect(x-9,229,18,16,i===selected?'ls-selected':'ls-module',3);s+=path('M'+x+' 261 V279',i===selected?'ls-signal':'ls-wire')});
+      xs.forEach(function(x){s+=path('M'+x+' 191 Q'+x+' 210 '+xs[4]+' 213','ls-wire')});
+      s+=text(left+10,218,'attention','ls-svg-dim','start');s+=text(right-5,249,'MLP','ls-svg-dim','end');
+      s+=rect(left+6,282,right-left-12,35,'ls-module');s+=rect(left+3,278,right-left-6,35,'ls-module');s+=rect(left,274,right-left,35,'ls-module');s+=w<380?text(cx,289,'Blocks 2–12')+text(cx,303,'same stream width','ls-svg-dim'):text(cx,296,'Blocks 2–12 · same stream width');
+      xs.forEach(function(x,i){s+=path('M'+x+' 309 V325',i===4?'ls-signal':'ls-wire');s+='<circle cx="'+x+'" cy="325" r="3" fill="'+(i===4?'var(--ls-active)':'var(--ls-line)')+'"/>'});
+      s+=path('M'+xs[4]+' 328 V337 H'+cx+' V347','ls-signal',true);
+      s+=rect(left,350,right-left,33,'ls-module');s+=text(cx,371,'Final norm → vocabulary scores');
+      s+=path('M'+cx+' 383 V401','ls-signal',true);s+=text(cx,419,'Softmax → select one token');
+      s+=rect(cx-57,435,114,31,'ls-selected');s+=text(cx,455,'Append token ID');
+      s+=path('M'+(cx+57)+' 450 H'+(w-13)+' V42 H'+(right+5),'ls-signal',true);
+      s+=text(w-18,436,'repeat','ls-svg-dim','end');
+      visual.innerHTML=svg(w,477,s,'Five token streams pass through embeddings, twelve transformer blocks, a final normalization and vocabulary projection. Only the last position selects the next token, whose ID is appended for the next iteration.');
+      controls.innerHTML=button('Open one block','inspect-block',true)+button('Start with learning','start-learning',false);
+      $('ls-status').textContent='Neural networks are inside this model; tokenization starts the prompt’s journey.';
+    }
+    function neural(w){
+      let w1=learning===2?2.05:2,w2=learning===2 ? 0.7 : 0.5,h=w1,pred=h*w2,loss=.5*(pred-2)*(pred-2),back=learning===1;
+      const narrow=w<390,cx=w/2;
+      let s='';
+      if(narrow){
+        const ys=[36,143,250],labs=['Input x = 1','ReLU output = '+h.toFixed(2),'Prediction = '+pred.toFixed(3)];
+        ys.forEach(function(y,i){s+=rect(cx-98,y,196,40,i===2?'ls-selected':'ls-module');s+=text(cx,y+25,labs[i]);if(i<2){s+=path('M'+cx+' '+(y+40)+' V'+(ys[i+1]-4),back?'ls-back':'ls-signal',!back);s+=text(cx+13,y+76,'w'+(i+1)+' = '+(i===0?w1:w2).toFixed(2),'ls-svg-dim','start')}});
+        if(back){s+=text(cx,324,'Gradients: w1 = −0.5 · w2 = −2','ls-svg-dim')}
+      }else{
+        const xs=[w*.13,w*.5,w*.87],labels=['Input','ReLU','Prediction'],vals=['1',h.toFixed(2),pred.toFixed(3)];
+        for(let i=0;i<2;i++){s+=path('M'+(xs[i]+33)+' 112 H'+(xs[i+1]-35),back?'ls-back':'ls-signal',!back);s+=text((xs[i]+xs[i+1])/2,91,'w'+(i+1)+' = '+(i===0?w1:w2).toFixed(2),'ls-svg-dim');if(back)s+=text((xs[i]+xs[i+1])/2,148,'gradient '+(i===0?'−0.5':'−2'),'ls-svg-dim')}
+        xs.forEach(function(x,i){s+='<circle cx="'+x+'" cy="112" r="33" class="'+(i===2?'ls-selected':'ls-module')+'"/>';s+=text(x,117,vals[i]);s+=text(x,173,labels[i]);});
+        s+=text(cx,222,back?'Backward: loss gradients reach the weights':'Forward: weighted sums and activation','ls-svg-dim');
+      }
+      const ly=narrow?355:271;
+      s+=rect(cx-100,ly-23,200,46,back?'ls-module':'ls-selected');s+=text(cx,ly+5,'Loss = '+loss.toFixed(3)+' · target = 2');
+      visual.innerHTML=svg(w,ly+44,s,'Two-weight teaching network. Weight one is '+w1+', weight two is '+w2+'. Prediction is '+pred+'. Squared-error loss is '+loss+'.');
+      const labels=['Show backward pass','Apply gradient step','Replay learning step'];
+      controls.innerHTML=button(labels[learning],'learn',true);
+      $('ls-status').textContent=['Forward values from Guide 1; the weights have not changed.','Backpropagation computes gradients; the optimizer will update the weights.','Learning rate 0.1: both weights updated from the same backward pass.'][learning];
+    }
+    function tokenScene(){
+      let s='<div class="ls-stage-label">TOKEN PIECES · space is shown as ␠</div><div class="ls-token-grid">';
+      tokens.forEach(function(t,i){s+='<div class="ls-token-column"><button class="ls-token cursor-interaction" type="button" data-token="'+i+'" aria-pressed="'+(selected===i)+'">'+escape(spaces?t.replace(' ','␠'):t)+'</button><div class="ls-token-id">'+(showIds?ids[i]:'↓')+'</div></div>'});s+='</div>';
+      s+='<div class="ls-equation-row"><span class="ls-shape">5 token IDs</span><span>→</span><span class="ls-shape">5 embedding lookups</span></div>';
+      visual.innerHTML=s;
+      controls.innerHTML=button(showIds?'Hide IDs':'Reveal token IDs','ids',true)+'<label><input type="checkbox" data-action="spaces" '+(spaces?'checked':'')+'> Show spaces</label>';
+      $('ls-status').textContent='Selected '+JSON.stringify(tokens[selected])+': ID '+ids[selected]+'. '+(selected===0?'This first token has no leading space.':'The leading space belongs to its token.');
+    }
+    function embedding(){
+      let s='<div class="ls-inset-label"><span>Token table: 50,257 rows</span><span>768 values per row</span></div><div class="ls-embedding-table">';
+      ids.forEach(function(id,i){s+='<button class="cursor-interaction" type="button" data-token="'+i+'" aria-pressed="'+(selected===i)+'">'+id+'</button><div class="ls-tensor-row '+(selected===i?'ls-active-row':'')+'" aria-label="'+(selected===i?'Selected row':'Table row')+', 768 values, schematic">';for(let j=0;j<7;j++)s+='<span class="ls-cell"></span>';s+='<span aria-hidden="true">…</span></div>'});
+      s+='</div><div class="ls-equation-row"><span class="ls-shape">Token row '+ids[selected]+'</span><span>+</span><span class="ls-shape">Position row '+selected+'</span></div><div class="ls-equation-row"><span>↓</span><span class="ls-shape">One 768-number stream</span></div>';
+      visual.innerHTML=s;controls.innerHTML=button('Follow into attention','into-attention',true);
+      $('ls-status').textContent='Position '+(selected+1)+' · '+JSON.stringify(tokens[selected])+'. All five streams together have shape 5 × 768.';
+    }
+    function attention(){
+      const A=[[1,0,0,0,0],[.619,.381,0,0,0],[.757,.140,.103,0,0],[.042,.017,.899,.042,0],[.081,.215,.135,.488,.081]],words=['the','cat','sat','on','the'];
+      let s='<div class="ls-inset-label"><span>Rows: queries</span><span>Columns: keys</span></div><table class="ls-table" aria-label="Causal attention weights from the untrained toy in Guide 4"><thead><tr><th>Query ↓</th>';
+      words.forEach(function(t,i){s+='<th scope="col">'+(i+1)+'·'+t+'</th>'});s+='</tr></thead><tbody>';
+      words.forEach(function(t,i){s+='<tr><th scope="row"><button class="ls-row-button cursor-interaction" data-token="'+i+'" type="button" aria-pressed="'+(selected===i)+'">'+(i+1)+'·'+t+'</button></th>';A[i].forEach(function(a,j){s+='<td class="'+(j>i?'ls-masked':selected===i?'ls-hot':'')+'" aria-label="'+(j>i?'Future position, weight zero':a.toFixed(3))+'">'+(j>i?'×':a.toFixed(3))+'</td>'});s+='</tr>'});s+='</tbody></table><div class="ls-inset-label"><span>× future position: weight 0</span><span>Selected row sums to 1</span></div>';
+      s+='<div class="ls-equation-row"><span class="ls-shape">Selected attention row</span><span>×</span><span class="ls-shape">Value vectors</span><span>→</span><span class="ls-shape">Weighted mixture</span></div>';
+      visual.innerHTML=s;controls.innerHTML='';$('ls-status').textContent='Position '+(selected+1)+' can read positions 1–'+(selected+1)+'. These untrained weights demonstrate the calculation, not learned relevance.';
+    }
+    function transformer(w){
+      const cx=w/2;let s='';
+      if(!openBlock){
+        const xs=tokens.map(function(_,i){return 20+(w-40)*(i+.5)/5});
+        xs.forEach(function(x,i){s+=text(x,20,tokens[i].trim());s+=path('M'+x+' 32 V320',i===selected?'ls-signal':'ls-wire')});
+        [[58,'Block 1'],[131,'Block 2'],[248,'Block 12']].forEach(function(a){s+=rect(12,a[0],w-24,47,'ls-module');s+=text(cx,a[0]+28,a[1]+' · attention + MLP')});
+        s+=text(cx,216,'⋮');s+=text(cx,351,'5 × 768 in · 5 × 768 out','ls-svg-dim');
+        visual.innerHTML=svg(w,374,s,'Five token residual streams pass through twelve transformer blocks, each with its own learned parameters. The shape stays five by 768.');
+      }else{
+        const bx=28,mx=Math.max(74,w*.34),mw=Math.min(195,w-mx-15),joinX=mx+mw/2;
+        s+=text(cx,15,'One selected token’s residual stream','ls-svg-dim');s+=text(bx,47,'x');
+        s+=path('M'+bx+' 59 V211 H'+joinX,'ls-signal');s+=path('M'+bx+' 65 H'+joinX+' V83','ls-wire');
+        s+=rect(mx,84,mw,34,'ls-module');s+=text(joinX,106,'Layer norm 1');s+=path('M'+joinX+' 118 V137','ls-signal',true);
+        s+=rect(mx,140,mw,40,'ls-selected');s+=text(joinX,165,'Causal attention');s+=path('M'+joinX+' 180 V200','ls-signal',true);
+        s+='<circle cx="'+joinX+'" cy="211" r="11" class="ls-selected"/>'+text(joinX,215,'+');
+        s+=path('M'+joinX+' 223 V235 H'+bx+' V384 H'+joinX,'ls-signal');s+=path('M'+bx+' 239 H'+joinX+' V256','ls-wire');
+        s+=rect(mx,257,mw,34,'ls-module');s+=text(joinX,279,'Layer norm 2');s+=path('M'+joinX+' 291 V311','ls-signal',true);
+        s+=rect(mx,314,mw,40,'ls-selected');s+=text(joinX,331,'MLP');s+=text(joinX,347,'768 → 3072 → 768','ls-svg-dim');s+=path('M'+joinX+' 354 V373','ls-signal',true);
+        s+='<circle cx="'+joinX+'" cy="384" r="11" class="ls-selected"/>'+text(joinX,388,'+');s+=path('M'+joinX+' 397 V418','ls-signal',true);s+=text(cx,444,'Updated stream · same width','ls-svg-dim');
+        visual.innerHTML=svg(w,464,s,'Pre-normalization transformer block. The residual stream bypasses layer normalization and attention and adds their result, then bypasses layer normalization and an MLP and adds its result.');
+      }
+      controls.innerHTML=button(openBlock?'Close block':'Open one block','block',true)+(openBlock?button('Zoom into learning','start-learning',false):'');
+      $('ls-status').textContent=openBlock?'The bypass carries the stream forward. Each branch adds an update.':'Same structure, different weights in every block. The MLP weights are shared across positions within a block.';
+    }
+    const gpt2={'.5':[.249,.182,.125,.116,.098],'1':[.076,.065,.054,.052,.048],'2':[.006,.005,.005,.005,.004]};
+    const loop=[{context:'the cat ',names:['s','r','a'],p:[.513,.265,.220],pick:'s'},{context:'the cat s',names:['a','r','n'],p:[.999,0,0],pick:'a'},{context:'the cat sa',names:['t','w','m'],p:[.599,.398,.001],pick:'t'},{context:'the cat sat',names:['␠','o','c'],p:[1,0,0],pick:' '}];
+    function bars(names,probs){let s='';names.forEach(function(n,i){s+='<div class="ls-prob"><span class="ls-prob-name">'+escape(n)+'</span><div class="ls-track"><div class="ls-fill '+(n==='all others'?'ls-other':'')+'" style="width:'+(probs[i]*100)+'%"></div></div><span class="ls-number">≈'+(probs[i]*100).toFixed(1)+'%</span></div>'});return s}
+    function gen(){
+      let s='<div class="ls-controls"><button class="cursor-interaction" type="button" data-gen="gpt2" aria-pressed="'+(generation==='gpt2')+'">GPT-2 distribution</button><button class="cursor-interaction" type="button" data-gen="tiny" aria-pressed="'+(generation==='tiny')+'">TinyGPT loop</button></div>';
+      if(generation==='gpt2'){
+        const p=gpt2[temperature===.5?'.5':String(temperature)],rest=1-p.reduce(function(a,b){return a+b},0);
+        s+='<div class="ls-inset-label"><span>Next-token probability · full 0–100% scale</span><span>T = '+temperature+'</span></div>'+bars(['␠floor','␠bed','␠couch','␠ground','␠edge','all others'],p.concat([rest]));
+        visual.innerHTML=s;
+        controls.innerHTML='<label>Temperature <select class="cursor-interaction" id="ls-temp"><option value="0.5" '+(temperature===.5?'selected':'')+'>0.5</option><option value="1" '+(temperature===1?'selected':'')+'>1.0</option><option value="2" '+(temperature===2?'selected':'')+'>2.0</option></select></label>'+button(appended?'Return to prompt':'Append greedy choice','append',true);
+        $('ls-source').textContent='Rounded GPT-2 probabilities recorded in Guide 6 · no live model call';
+        $('ls-status').textContent=appended?'“ floor” appended. Bars still show the preceding decision; another token requires a new model pass.':temperature===1?'“ mat” ranks 31st at about 0.4%. The remaining mass uses the displayed rounded values.':'Temperature changes the distribution. Token ranking and model weights stay the same.';
+      }else{
+        $('ls-source').textContent='Recorded TinyGPT character-level trace · Guide 6 · greedy selection';
+        const t=loop[Math.min(turn,3)];
+        s+='<div class="ls-generation-text">the cat <span class="ls-generated">'+escape('sat '.slice(0,turn))+'</span><span class="ls-caret">▏</span></div><div class="ls-inset-label"><span>'+(turn<4?'Top 3 next-character probabilities':'Final recorded decision')+'</span><span>'+Math.min(turn+1,4)+' / 4</span></div>'+bars(t.names,t.p);
+        visual.innerHTML=s;
+        controls.innerHTML=button(turn<4?'Append '+(t.pick===' '?'space':JSON.stringify(t.pick)):'Replay four steps','loop',true);
+        $('ls-status').textContent=turn<4?'Context → model → last-position distribution → choose → append character ID.':'Four model passes added four character tokens: s, a, t, space.';
+      }
+    }
+    function draw(){
+      const d=guide[scene];['ls-guide-number','ls-guide-heading','ls-question','ls-anchor','ls-focus','ls-breadcrumb','ls-title','ls-source'].forEach(function(id,i){$(id).textContent=d[i]});
+      root.querySelectorAll('[data-scene]').forEach(function(b){b.setAttribute('aria-pressed',Number(b.dataset.scene)===scene?'true':'false')});
+      setPrompt();controls.innerHTML='';const w=measuredWidth();lastWidth=w;
+      if(scene===0)overview(w);if(scene===1)neural(w);if(scene===2)tokenScene();if(scene===3)embedding();if(scene===4)attention();if(scene===5)transformer(w);if(scene===6)gen();
+      $('ls-footer-left').textContent=scene===1?'Training: forward → loss → backward → update':'Generation: learned weights stay fixed';
+    }
+    root.addEventListener('click',function(e){
+      const target=e.target&&e.target.nodeType===3?e.target.parentElement:e.target;
+      const el=target&&typeof target.closest==='function'?target.closest('button'):null;if(!el||!root.contains(el))return;
+      if(el.dataset.scene!==undefined){scene=Number(el.dataset.scene);draw();return}
+      if(el.dataset.token!==undefined){selected=Number(el.dataset.token);draw();return}
+      if(el.dataset.gen){generation=el.dataset.gen;draw();return}
+      const a=el.dataset.action;
+      if(a==='inspect-block'){scene=5;openBlock=true}if(a==='start-learning')scene=1;if(a==='learn')learning=(learning+1)%3;if(a==='ids')showIds=!showIds;if(a==='into-attention')scene=4;if(a==='block')openBlock=!openBlock;if(a==='append')appended=!appended;if(a==='loop')turn=(turn+1)%5;
+      if(a)draw();
+    });
+    root.addEventListener('change',function(e){
+      const target=e.target;if(!target)return;
+      if(target.id==='ls-temp'){
+        const next=Number(target.value);if(next!==0.5&&next!==1&&next!==2)return;
+        temperature=next;appended=false;draw();
+      }
+      if(target.getAttribute&&target.getAttribute('data-action')==='spaces'){spaces=target.checked;draw()}
+    });
+    draw();
+    // Render first. Resizing is optional and must not write to the DOM inside
+    // ResizeObserver's delivery phase, which can raise a fatal loop error.
+    function queueResize(){
+      if(resizePending||measuredWidth()===lastWidth)return;
+      resizePending=true;
+      const schedule=typeof requestAnimationFrame==='function'?requestAnimationFrame:function(fn){return setTimeout(fn,16)};
+      schedule(function(){
+        resizePending=false;
+        if(root.isConnected===false)return;
+        if(measuredWidth()!==lastWidth)draw();
+      });
+    }
+    if(typeof ResizeObserver==='function'){
+      const observer=new ResizeObserver(queueResize);
+      observer.observe(root);
+    }
+    window.addEventListener('resize',queueResize,{passive:true});
+  }
+  // Some hosts attach the fragment before executing scripts; others finish
+  // attaching its DOM during startup. Handle both without double binding.
+  mount();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});
+  if(typeof requestAnimationFrame==='function')requestAnimationFrame(mount);
+  })();
+  </script>
+</div>

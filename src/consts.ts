@@ -3,7 +3,7 @@ import type { Site, Page, Links, Socials } from "@types"
 // Global
 export const SITE: Site = {
   TITLE: "Vinay Gautam",
-  DESCRIPTION: "PhD in Computer Science | Software Developer | Data Engineer | Cloud Focussed | ML & AI Enthusiast. Personal notes, scripts, and projects on Linux, DevOps, semantic data engineering, and context-aware GenAI.",
+  DESCRIPTION: "Research software engineer focused on applied AI. Software and data systems for research, LLMs with useful tools and workflows, semantic modelling.",
   AUTHOR: "Vinay Gautam",
 }
 
@@ -39,10 +39,6 @@ export const LINKS: Links = [
   { 
     TEXT: "Home", 
     HREF: "/", 
-  },
-  { 
-    TEXT: "Work", 
-    HREF: "/work", 
   },
   { 
     TEXT: "Blog", 

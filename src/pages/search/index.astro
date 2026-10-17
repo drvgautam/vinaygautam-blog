@@ -5,9 +5,10 @@ import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
 import Search from "@components/Search"
 import { SEARCH } from "@consts"
+import { isListedBlogPost } from "@lib/utils"
 
 const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+  .filter(isListedBlogPost)
 
 const projects = (await getCollection("projects"))
   .filter(post => !post.data.draft)

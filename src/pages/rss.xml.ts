@@ -1,6 +1,7 @@
 import rss from "@astrojs/rss"
 import { getCollection } from "astro:content"
 import { SITE } from "@consts"
+import { isListedBlogPost } from "@lib/utils"
 
 type Context = {
   site: string
@@ -8,7 +9,7 @@ type Context = {
 
 export async function GET(context: Context) {
 	// Only get content from portfolio collections (not datumint)
-	const posts = await getCollection("blog", ({ data }) => !data.draft)
+	const posts = await getCollection("blog", isListedBlogPost)
   const projects = await getCollection("projects", ({ data }) => !data.draft)
 
   // Filter out any items that might be from datumint (extra safety check)

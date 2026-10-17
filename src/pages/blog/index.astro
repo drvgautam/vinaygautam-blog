@@ -5,9 +5,10 @@ import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
 import Blog from "@components/Blog"
 import { BLOG } from "@consts"
+import { isListedBlogPost } from "@lib/utils"
 
 const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+  .filter(isListedBlogPost)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
 const tags = [...new Set(posts.flatMap(post => post.data.tags))]

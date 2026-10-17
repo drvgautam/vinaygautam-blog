@@ -19,3 +19,12 @@ export function readingTime(html: string) {
   const readingTimeMinutes = ((wordCount / 200) + 1).toFixed()
   return `${readingTimeMinutes} min read`
 }
+
+/** Series chapters (order > 0) stay reachable by URL but are hidden from blog listings. */
+export function isListedBlogPost(post: {
+  data: { draft?: boolean; series?: string; seriesOrder?: number }
+}) {
+  if (post.data.draft) return false
+  if (post.data.series && (post.data.seriesOrder ?? 0) > 0) return false
+  return true
+}
