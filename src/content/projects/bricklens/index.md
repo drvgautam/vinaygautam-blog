@@ -10,7 +10,7 @@ tags:
   - Neo4j
   - Python
 repoUrl: https://github.com/drvgautam/bricklens
-deckUrl: https://github.com/drvgautam/bricklens/blob/main/BrickLens-deck.pdf
+deckUrl: /projects/bricklens/BrickLens-deck.pdf
 ---
 
 **BrickLens** connects building models and sensor data to localise faults and surface the supporting evidence.
