@@ -9,7 +9,7 @@ tags:
   - Brick Schema
   - Neo4j
   - Python
-repoUrl: https://github.com/drvgautam
+repoUrl: https://github.com/drvgautam/bricklens
 ---
 
 **BrickLens** connects building models and sensor data to localise faults and surface the supporting evidence.

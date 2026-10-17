@@ -9,7 +9,7 @@ tags:
   - FastAPI
   - PostgreSQL
   - pgvector
-repoUrl: https://github.com/drvgautam
+repoUrl: https://github.com/drvgautam/fairdatahive
 ---
 
 **FairDataHive** helps teams describe and discover datasets through structured metadata, access workflows, and semantic search.
