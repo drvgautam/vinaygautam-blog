@@ -57,11 +57,16 @@ const coffeeUrl = BUY_ME_COFFEE_URL || "https://buymeacoffee.com"
               <>
               {isDatumint && (
                 <a
-                  href="/Homelab"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="block px-4 py-3 rounded-lg text-base font-medium outline-none transition-colors duration-200 ease-in-out focus-visible:ring-2 focus-visible:ring-blue-500/40 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white"
-                  aria-label="homelab (external)"
+                  href="/blog/building-my-homelab"
+                  aria-current={pathname.startsWith("/blog/building-my-homelab") ? "page" : undefined}
+                  class={cn(
+                    "block px-4 py-3 rounded-lg text-base font-medium outline-none",
+                    "transition-colors duration-200 ease-in-out focus-visible:ring-2 focus-visible:ring-blue-500/40",
+                    pathname.startsWith("/blog/building-my-homelab")
+                      ? "bg-black dark:bg-white text-white dark:text-black"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white"
+                  )}
+                  aria-label="Homelab"
                 >
                   <span class="flex items-center gap-2">
                     <svg
@@ -79,20 +84,6 @@ const coffeeUrl = BUY_ME_COFFEE_URL || "https://buymeacoffee.com"
                       <path d="M7 7h.01M11 7h.01M7 17h.01M11 17h.01" />
                     </svg>
                     <span>Homelab</span>
-                    <svg
-                      class="w-4 h-4 opacity-70"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <path d="M15 3h6v6" />
-                      <path d="M10 14L21 3" />
-                    </svg>
                   </span>
                 </a>
               )}
