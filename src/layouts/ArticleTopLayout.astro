@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { formatDate, readingTime } from "@lib/utils"
+import ViewCount from "@components/ViewCount"
 
 type Props = {
   entry: CollectionEntry<"projects"> | CollectionEntry<"blog">
@@ -40,6 +41,9 @@ const bannerCaption = collection === "blog" ? data.bannerCaption : null
           </svg>
           {formatDate(date)}
         </div>
+        {collection === "blog" && (
+          <ViewCount client:load slug={entry.slug} increment={true} />
+        )}
         <div class="flex items-center gap-2">
           <svg class="size-4 stroke-current">
             <use href="/ui.svg#book-open"/>

@@ -68,6 +68,12 @@
       <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
     </symbol>
 
+    <!-- eye -->
+    <symbol id="eye" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+
     <!-- arrow-right -->
     <symbol id="arrow-right" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24">
       <path d="M5 12h14"/>

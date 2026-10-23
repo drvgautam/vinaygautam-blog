@@ -118,6 +118,19 @@ git log --oneline -10   # Recent commits
 - **`main` branch** → Auto-deploys to `www.vinaygautam.com`
 - **`develop` branch** → Can be configured for preview deployments
 
+## Blog view counts (Cloudflare KV)
+
+Per-post view counts are stored in Workers KV via the Pages Function at `/api/views`.
+
+One-time Cloudflare setup:
+
+1. In the Cloudflare dashboard, open **Workers & Pages → KV** and create a namespace (e.g. `blog-views`).
+2. Open your **Pages** project → **Settings → Functions → KV namespace bindings**.
+3. Add a binding: variable name `VIEWS`, namespace `blog-views` (Production; add the same for Preview if you use preview deploys).
+4. Redeploy (or push a commit) so the binding is active.
+
+Without the `VIEWS` binding, the API responds but counts stay at `0` / do not persist. Local `astro preview` does not run Pages Functions, so the eye icon stays hidden until the site is on Cloudflare with KV bound.
+
 ## Emergency Hotfixes
 
 If you need to fix something urgently on main:

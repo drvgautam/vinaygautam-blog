@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
 import { SITE, SOCIALS } from "@consts"
-import { isListedBlogPost } from "@lib/utils"
+import { isListedBlogPost, readingTime } from "@lib/utils"
+import ViewCount from "@components/ViewCount"
 
 const posts = (await getCollection("blog"))
   .filter(isListedBlogPost)
@@ -140,6 +141,17 @@ const featuredProjects = [
                       month: "long",
                       year: "numeric",
                     })}
+                  </span>
+                  <ViewCount
+                    client:load
+                    slug={latestPost.slug}
+                    class="text-xs text-gray-500 dark:text-gray-400"
+                  />
+                  <span class="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                    <svg class="size-3.5 stroke-current" aria-hidden="true">
+                      <use href="/ui.svg#book-open" />
+                    </svg>
+                    {readingTime(latestPost.body)}
                   </span>
                 </div>
                 <h3 class="text-lg sm:text-xl font-bold text-black dark:text-white mb-2 group-hover:underline underline-offset-2">

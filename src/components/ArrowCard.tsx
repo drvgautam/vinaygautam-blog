@@ -1,5 +1,6 @@
-import { formatDate } from "@lib/utils"
+import { formatDate, readingTime } from "@lib/utils"
 import type { CollectionEntry } from "astro:content"
+import ViewCount from "@components/ViewCount"
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">
@@ -7,18 +8,32 @@ type Props = {
 }
 
 export default function ArrowCard({entry, pill}: Props) {
+    const isBlog = entry.collection === "blog"
+    const minutes = isBlog ? readingTime(entry.body) : null
+
     return (
       <a href={`/${entry.collection}/${entry.slug}`} class="group p-6 gap-3 flex flex-col items-start border rounded-2xl shadow border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-lg transition-all">
       <div class="w-full group-hover:text-black group-hover:dark:text-white blend">
         <div class="flex flex-wrap items-center gap-2">
           {pill &&
             <div class="text-sm capitalize px-2 py-0.5 rounded-full border border-black/15 dark:border-white/25">
-              {entry.collection === "blog" ? "post" : "project"}
+              {isBlog ? "post" : "project"}
             </div>
           }
           <div class="text-sm uppercase">
             {formatDate(entry.data.date)}
           </div>
+          {isBlog && (
+            <ViewCount slug={entry.slug} class="text-sm uppercase opacity-90" />
+          )}
+          {minutes && (
+            <span class="inline-flex items-center gap-1.5 text-sm uppercase opacity-90" title={minutes}>
+              <svg class="size-4 stroke-current" aria-hidden="true">
+                <use href="/ui.svg#book-open" />
+              </svg>
+              <span>{minutes}</span>
+            </span>
+          )}
         </div>
         <div class="font-semibold mt-3 text-black dark:text-white">
           {entry.data.title}
