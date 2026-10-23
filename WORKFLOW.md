@@ -132,7 +132,7 @@ Per-post view counts are stored in Workers KV via the Pages Function at `/api/vi
    - Apply to **Production** (and Preview if you use preview deploys)
 4. **Save**, then trigger a new deployment (or push a commit) so the binding is live.
 
-Check it worked: open `https://www.vinaygautam.com/api/views?slugs=building-my-homelab` — you should get JSON like `{"building-my-homelab":0}` with status 200. If you get status **503**, the `VIEWS` binding is still missing.
+Check it worked: open `https://www.vinaygautam.com/api/views?slugs=building-my-homelab` — you should get JSON like `{"building-my-homelab":0}` with status 200. If you get status **503**, the `VIEWS` binding is still missing or the project has not been redeployed since the binding was added.
 
 Local testing: `npx wrangler pages dev dist --kv=VIEWS --port=8788` (not plain `astro preview`).
 
