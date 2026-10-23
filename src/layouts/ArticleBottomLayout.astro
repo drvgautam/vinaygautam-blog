@@ -35,14 +35,16 @@ const items = seriesId
 const index = items.findIndex(x => x.slug === entry.slug)
 const prev = items.length > 1 ? items[(index - 1 + items.length) % items.length] : undefined
 const next = items.length > 1 ? items[(index + 1) % items.length] : undefined
+const isWideInteractive = collection === "blog" && entry.slug === "git-from-scratch"
+const showToc = !isWideInteractive && (headings?.length ?? 0) > 0
 ---
 
 <div>
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-9 flex justify-center">
-      <article id="article-root" class="w-full max-w-[720px]">
+    <div class:list={["flex justify-center", isWideInteractive ? "lg:col-span-12" : "lg:col-span-9"]}>
+      <article id="article-root" class:list={["w-full", isWideInteractive ? "max-w-[1080px]" : "max-w-[720px]"]}>
       {/* Mobile TOC */}
-      {headings?.length > 0 && (
+      {showToc && (
         <details class="mb-6 lg:hidden border rounded-lg border-black/15 dark:border-white/20">
           <summary class="px-4 py-3 cursor-pointer select-none text-sm font-medium">Contents</summary>
           <nav class="px-4 pb-3">
@@ -159,7 +161,7 @@ const next = items.length > 1 ? items[(index + 1) % items.length] : undefined
       </article>
     </div>
     {/* Desktop TOC - right column similar to Chirpy */}
-    {headings?.length > 0 && (
+    {showToc && (
       <aside class="hidden lg:block lg:col-span-3">
         <div id="toc-panel" class="sticky top-24 z-20 w-full rounded-xl border border-black/10 dark:border-white/15 px-4 pt-4 pb-6 bg-white/90 dark:bg-gray-900/90 backdrop-blur max-h-[calc(100vh-7rem)] overflow-y-auto">
           <div class="text-xs tracking-wide uppercase mb-3 text-black/70 dark:text-white/70 font-semibold">Contents</div>

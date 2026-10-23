@@ -1,0 +1,1024 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<div id="git-from-scratch" class="not-prose">
+<style>
+
+/* Layout: a bench notebook. One reading column of chapters, each ending in its Git command card;
+   a wide workbench sandbox in the middle. Color encodes object kind: green = snapshot, amber = branch, violet = tag, red = HEAD. */
+#git-from-scratch{
+  --paper:#EDF0EC; --sheet:#F8FAF7; --ink:#17201D; --muted:#56635E; --rule:#C7D0CA;
+  --commit:#11765E; --commit-soft:#D5EAE2;
+  --branch:#A9650F; --branch-soft:#F3E3CB;
+  --tag:#6447AA; --tag-soft:#E5DDF5;
+  --head:#B83445; --ghost:#A7B2AD;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ #git-from-scratch:not([data-theme="light"]){
+  --paper:#111715; --sheet:#18201D; --ink:#E3EAE6; --muted:#97A59F; --rule:#2B3833;
+  --commit:#45C39C; --commit-soft:#173A30; --branch:#E6A452; --branch-soft:#3D2C14;
+  --tag:#AC90EE; --tag-soft:#2D2346; --head:#F07583; --ghost:#4A5752; color-scheme:dark; } }
+#git-from-scratch[data-theme="dark"]{
+  --paper:#111715; --sheet:#18201D; --ink:#E3EAE6; --muted:#97A59F; --rule:#2B3833;
+  --commit:#45C39C; --commit-soft:#173A30; --branch:#E6A452; --branch-soft:#3D2C14;
+  --tag:#AC90EE; --tag-soft:#2D2346; --head:#F07583; --ghost:#4A5752; color-scheme:dark; }
+
+#git-from-scratch,#git-from-scratch *{box-sizing:border-box}
+#git-from-scratch{background:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.62;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:0 64px;}
+#git-from-scratch .wrap{max-width:780px; margin:0 auto}
+#git-from-scratch .wide{max-width:1080px; margin:0 auto}
+#git-from-scratch h1, #git-from-scratch h2, #git-from-scratch h3{font-family:var(--f-display); line-height:1.1; text-wrap:balance; margin:0}
+#git-from-scratch p{margin:0}
+#git-from-scratch code, #git-from-scratch .mono{font-family:var(--f-mono); font-size:.86em}
+#git-from-scratch a{color:var(--commit)}
+#git-from-scratch :focus-visible{outline:2px solid var(--branch); outline-offset:2px}
+
+/* hero */
+#git-from-scratch .hero{padding-block:56px 32px; display:grid; gap:28px}
+#git-from-scratch .kicker{font-family:var(--f-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+#git-from-scratch .hero h1{font-size:clamp(44px, 9vw, 92px); font-weight:800; letter-spacing:-.03em}
+#git-from-scratch .hero h1 .dot{color:var(--commit)}
+#git-from-scratch .lede{font-size:clamp(18px,2.4vw,21px); max-width:60ch}
+#git-from-scratch .legend{display:flex; flex-wrap:wrap; gap:10px 18px; font-family:var(--f-mono); font-size:13px; color:var(--muted)}
+#git-from-scratch .legend span{display:inline-flex; align-items:center; gap:7px}
+#git-from-scratch .sw{width:12px; height:12px; border-radius:50%; display:inline-block}
+#git-from-scratch .toc{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr)); gap:4px 20px; padding:18px 0 0; border-top:1px solid var(--rule); font-family:var(--f-display); font-size:15px}
+#git-from-scratch .toc a{color:var(--ink); text-decoration:none; display:flex; gap:10px; padding:3px 0}
+#git-from-scratch .toc a:hover{color:var(--commit)}
+#git-from-scratch .toc b{font-family:var(--f-mono); font-weight:400; color:var(--muted); font-size:12px; min-width:22px; padding-top:2px}
+
+/* chapters */
+#git-from-scratch .ch{padding-block:48px 8px; border-top:1px solid var(--rule); display:grid; gap:20px}
+#git-from-scratch .ch-head{display:grid; gap:8px}
+#git-from-scratch .num{font-family:var(--f-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--commit)}
+#git-from-scratch .ch h2{font-size:clamp(28px,5vw,40px); font-weight:700; letter-spacing:-.02em}
+#git-from-scratch .problem{font-style:italic; color:var(--muted)}
+#git-from-scratch .prose{display:grid; gap:14px; max-width:66ch}
+#git-from-scratch figure{margin:0; background:var(--sheet); border:1px solid var(--rule); border-radius:6px; padding:18px; overflow-x:auto}
+#git-from-scratch figure svg{display:block; width:100%; height:auto; min-width:520px}
+#git-from-scratch figcaption{font-family:var(--f-mono); font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.5}
+#git-from-scratch .rule{border-left:3px solid var(--commit); padding:4px 0 4px 16px; font-family:var(--f-display); font-size:19px; font-weight:500; max-width:60ch}
+#git-from-scratch .rule small{display:block; font-family:var(--f-mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--commit); margin-bottom:4px; font-weight:400}
+#git-from-scratch details.git{background:var(--ink); color:var(--paper); border-radius:6px; padding:0; max-width:100%}
+#git-from-scratch details.git summary{cursor:pointer; padding:12px 16px; font-family:var(--f-mono); font-size:13px; list-style:none; display:flex; justify-content:space-between; gap:12px}
+#git-from-scratch details.git summary::-webkit-details-marker{display:none}
+#git-from-scratch details.git summary::after{content:"show"; opacity:.6}
+#git-from-scratch details.git[open] summary::after{content:"hide"}
+#git-from-scratch .git-body{padding:0 16px 16px; display:grid; gap:10px; font-size:15px}
+#git-from-scratch .git-body pre{margin:0; font-family:var(--f-mono); font-size:13.5px; line-height:1.6; overflow-x:auto; white-space:pre}
+#git-from-scratch .git-body .c{opacity:.6}
+#git-from-scratch .git-body p{font-family:var(--f-body); opacity:.9}
+
+/* svg classes */
+#git-from-scratch .ln{stroke:var(--muted); stroke-width:1.6; fill:none}
+#git-from-scratch .ln-ghost{stroke:var(--ghost); stroke-width:1.4; fill:none; stroke-dasharray:4 4}
+#git-from-scratch .nd{fill:var(--commit)} #git-from-scratch .nd-ghost{fill:var(--ghost)}
+#git-from-scratch .nd-ring{fill:var(--sheet); stroke:var(--commit); stroke-width:2}
+#git-from-scratch .t{fill:var(--ink); font-family:var(--f-mono); font-size:12px}
+#git-from-scratch .t-m{fill:var(--muted); font-family:var(--f-mono); font-size:11px}
+#git-from-scratch .t-d{fill:var(--ink); font-family:var(--f-display); font-size:14px; font-weight:600}
+#git-from-scratch .pill-b{fill:var(--branch-soft); stroke:var(--branch); stroke-width:1.2}
+#git-from-scratch .pill-t{fill:var(--tag-soft); stroke:var(--tag); stroke-width:1.2}
+#git-from-scratch .tb{fill:var(--branch); font-family:var(--f-mono); font-size:11.5px; font-weight:600}
+#git-from-scratch .tt{fill:var(--tag); font-family:var(--f-mono); font-size:11.5px; font-weight:600}
+#git-from-scratch .box{fill:var(--paper); stroke:var(--rule); stroke-width:1.2}
+#git-from-scratch .box-c{fill:var(--commit-soft); stroke:var(--commit); stroke-width:1.2}
+#git-from-scratch .box-new{fill:var(--branch-soft); stroke:var(--branch); stroke-width:1.4}
+#git-from-scratch .bad{stroke:var(--head); stroke-width:2.2; fill:none}
+#git-from-scratch .tbad{fill:var(--head); font-family:var(--f-mono); font-size:12px; font-weight:600}
+#git-from-scratch .arrowhead{fill:var(--muted)}
+
+/* interactive panels */
+#git-from-scratch .panel{background:var(--sheet); border:1px solid var(--rule); border-radius:6px; padding:18px; display:grid; gap:14px}
+#git-from-scratch .btn{font-family:var(--f-mono); font-size:13px; padding:7px 12px; border-radius:4px; border:1px solid var(--rule); background:var(--paper); color:var(--ink); cursor:pointer}
+#git-from-scratch .btn:hover{border-color:var(--ink)}
+#git-from-scratch .btn.primary{background:var(--commit); color:var(--sheet); border-color:var(--commit)}
+#git-from-scratch .btn.amber{background:var(--branch-soft); border-color:var(--branch); color:var(--ink)}
+#git-from-scratch .btn.violet{background:var(--tag-soft); border-color:var(--tag); color:var(--ink)}
+#git-from-scratch .btn:disabled{opacity:.45; cursor:not-allowed}
+#git-from-scratch input[type=text], #git-from-scratch select, #git-from-scratch textarea{font-family:var(--f-mono); font-size:13px; padding:7px 9px; border:1px solid var(--rule); border-radius:4px; background:var(--paper); color:var(--ink); min-width:0}
+#git-from-scratch textarea{width:100%; resize:vertical}
+#git-from-scratch .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+#git-from-scratch .lbl{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+
+/* hash demo */
+#git-from-scratch .hash-out{display:grid; gap:8px}
+#git-from-scratch .hash-out div{display:grid; gap:2px; min-width:0}
+#git-from-scratch .hash-out output{font-family:var(--f-mono); font-size:13.5px; word-break:break-all; color:var(--commit)}
+
+/* staging */
+#git-from-scratch .stage-grid{display:grid; grid-template-columns:minmax(90px,1.1fr) repeat(3, minmax(70px,1fr)) minmax(120px,1.3fr); gap:0; font-family:var(--f-mono); font-size:13px; overflow-x:auto}
+#git-from-scratch .stage-grid > div{padding:9px 8px; border-bottom:1px solid var(--rule); display:flex; align-items:center; gap:6px; min-width:0}
+#git-from-scratch .stage-grid .h{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+#git-from-scratch .ver{padding:2px 7px; border-radius:10px; background:var(--paper); border:1px solid var(--rule)}
+#git-from-scratch .ver.diff{border-color:var(--branch); background:var(--branch-soft)}
+#git-from-scratch .status{font-size:12px; color:var(--muted)}
+#git-from-scratch .scroll-x{overflow-x:auto}
+#git-from-scratch .stage-wrap{min-width:560px}
+#git-from-scratch .note{font-family:var(--f-mono); font-size:13px; padding:10px 12px; border-radius:4px; background:var(--paper); border:1px dashed var(--rule); min-height:42px}
+#git-from-scratch .note b{color:var(--commit)}
+#git-from-scratch .note .cmd{color:var(--branch)}
+
+/* workbench */
+#git-from-scratch .bench{padding-block:0 8px; display:grid; gap:22px}
+#git-from-scratch .bench-intro{padding-top:48px; border-top:1px solid var(--rule); display:grid; gap:20px; width:100%}
+#git-from-scratch .bench-intro h2{font-size:clamp(28px,5vw,40px); font-weight:700; letter-spacing:-.02em}
+#git-from-scratch .bench-grid{display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:14px}
+@media (max-width:720px){ #git-from-scratch .bench-grid{grid-template-columns:minmax(0,1fr)} }
+#git-from-scratch .graph{background:var(--sheet); border:1px solid var(--rule); border-radius:6px; overflow-x:auto; padding-block:6px}
+#git-from-scratch .hint{font-family:var(--f-mono); font-size:12.5px; color:var(--muted)}
+#git-from-scratch .graph svg{display:block}
+#git-from-scratch .side{display:grid; gap:12px; align-content:start; min-width:0}
+#git-from-scratch .file{background:var(--sheet); border:1px solid var(--rule); border-radius:6px; padding:12px 14px; min-width:0}
+#git-from-scratch .file pre{margin:6px 0 0; font-family:var(--f-mono); font-size:12.5px; line-height:1.6; white-space:pre-wrap; word-break:break-word}
+#git-from-scratch .file .path{font-family:var(--f-mono); font-size:11px; color:var(--muted)}
+#git-from-scratch .controls{display:grid; gap:10px}
+#git-from-scratch .cnode{cursor:pointer}
+#git-from-scratch .cnode:focus{outline:none}
+#git-from-scratch .cnode:focus-visible circle{stroke:var(--branch); stroke-width:3}
+
+/* final table */
+#git-from-scratch .tbl-wrap{overflow-x:auto; border:1px solid var(--rule); border-radius:6px; background:var(--sheet)}
+#git-from-scratch table{border-collapse:collapse; width:100%; min-width:620px; font-size:15px}
+#git-from-scratch th, #git-from-scratch td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
+#git-from-scratch th{font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:400}
+#git-from-scratch td code{color:var(--commit); white-space:nowrap}
+#git-from-scratch tr:last-child td{border-bottom:0}
+#git-from-scratch footer{padding-top:40px; font-family:var(--f-mono); font-size:12px; color:var(--muted)}
+@media (prefers-reduced-motion: reduce){ #git-from-scratch,#git-from-scratch *{transition:none!important; animation:none!important} }
+
+#git-from-scratch.dark-forced, html.dark #git-from-scratch, .dark #git-from-scratch {
+  --paper:#111715; --sheet:#18201D; --ink:#E3EAE6; --muted:#97A59F; --rule:#2B3833;
+  --commit:#45C39C; --commit-soft:#173A30; --branch:#E6A452; --branch-soft:#3D2C14;
+  --tag:#AC90EE; --tag-soft:#2D2346; --head:#F07583; --ghost:#4A5752; color-scheme:dark;
+}
+
+</style>
+
+<header class="wrap hero">
+  <div class="kicker">A visual guide · 13 chapters and a workbench</div>
+  <h1>Build Git<br>yourself<span class="dot">.</span></h1>
+  <p class="lede">Most Git lessons start with commands. This one starts with a computer that has only a text editor and a way to copy folders. Chapter by chapter you hit a real problem, invent the smallest fix, and end up with Git. The commands appear only at the end of each chapter, once they have something to mean.</p>
+  <div class="legend" aria-label="Color key">
+    <span><i class="sw" style="background:var(--commit)"></i>snapshot (commit)</span>
+    <span><i class="sw" style="background:var(--branch)"></i>branch name</span>
+    <span><i class="sw" style="background:var(--tag)"></i>tag</span>
+    <span><i class="sw" style="background:var(--head)"></i>HEAD / trouble</span>
+  </div>
+  <nav class="toc" aria-label="Chapters">
+    <a href="#c1"><b>01</b>Snapshots</a>
+    <a href="#c2"><b>02</b>Parents make a tree</a>
+    <a href="#c3"><b>03</b>Branch names</a>
+    <a href="#c4"><b>04</b>Tags</a>
+    <a href="#c5"><b>05</b>Names from hashes</a>
+    <a href="#c6"><b>06</b>Working offline</a>
+    <a href="#c7"><b>07</b>Merges</a>
+    <a href="#c8"><b>08</b>Rewriting history</a>
+    <a href="#bench"><b>⌘</b>The workbench</a>
+    <a href="#c9"><b>09</b>The staging area</a>
+    <a href="#c10"><b>10</b>Diffs</a>
+    <a href="#c11"><b>11</b>Objects, not copies</a>
+    <a href="#c12"><b>12</b>Compression</a>
+    <a href="#c13"><b>13</b>Nothing is lost</a>
+    <a href="#map"><b>→</b>The full map</a>
+  </nav>
+</header>
+
+<main>
+<!-- 1 -->
+<section class="wrap ch" id="c1">
+  <div class="ch-head">
+    <div class="num">Chapter 01</div>
+    <h2>Snapshots</h2>
+    <p class="problem">Problem: you want to get back code you changed or deleted last week.</p>
+  </div>
+  <div class="prose">
+    <p>Think of a family that takes a portrait every year. Laid side by side, the photos let you step back to any year you like. You want the same thing for code: save points you can return to.</p>
+    <p>So you keep your project in a folder called <code>working</code>. Each time you finish a self‑contained piece of work, you copy the whole folder to <code>snapshot-0</code>, then <code>snapshot-1</code>, and so on. Inside each copy you drop a small file called <code>message</code> that says what you did and when.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 190" role="img" aria-label="The working folder is copied into numbered snapshot folders, each with a message file">
+      <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>
+      <rect x="20" y="60" width="120" height="74" rx="5" class="box"/>
+      <text x="80" y="92" text-anchor="middle" class="t-d">working</text>
+      <text x="80" y="112" text-anchor="middle" class="t-m">you edit here</text>
+      <path d="M140 97 C 175 97, 175 97, 205 97" class="ln" marker-end="url(#a1)"/>
+      <text x="172" y="86" text-anchor="middle" class="t-m">copy</text>
+      <g>
+        <rect x="215" y="60" width="110" height="74" rx="5" class="box-c"/><text x="270" y="88" text-anchor="middle" class="t">snapshot-0</text>
+        <rect x="231" y="100" width="78" height="22" rx="3" class="box"/><text x="270" y="115" text-anchor="middle" class="t-m">message</text>
+        <rect x="340" y="60" width="110" height="74" rx="5" class="box-c"/><text x="395" y="88" text-anchor="middle" class="t">snapshot-1</text>
+        <rect x="356" y="100" width="78" height="22" rx="3" class="box"/><text x="395" y="115" text-anchor="middle" class="t-m">message</text>
+        <rect x="465" y="60" width="110" height="74" rx="5" class="box-c"/><text x="520" y="88" text-anchor="middle" class="t">snapshot-2</text>
+        <rect x="481" y="100" width="78" height="22" rx="3" class="box"/><text x="520" y="115" text-anchor="middle" class="t-m">message</text>
+        <text x="610" y="102" class="t-d">…</text>
+      </g>
+      <text x="395" y="164" text-anchor="middle" class="t-m">frozen forever · never edited again</text>
+      <text x="270" y="44" text-anchor="middle" class="t-m">"Add parser · Mon 3 Mar"</text>
+    </svg>
+    <figcaption>Copy, label, never touch again. That is the whole first version of your system.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>A snapshot is a complete, frozen copy of the project plus a note describing it.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Git calls a snapshot a <b>commit</b>. The message file is the commit message.</p>
+<pre>git commit -m "Add parser"   <span class="c"># take a snapshot</span>
+git log                      <span class="c"># print every message file</span>
+git switch --detach &lt;id&gt;     <span class="c"># bring an old snapshot back into working</span></pre>
+  </div></details>
+</section>
+
+<!-- 2 -->
+<section class="wrap ch" id="c2">
+  <div class="ch-head">
+    <div class="num">Chapter 02</div>
+    <h2>Parents make a tree</h2>
+    <p class="problem">Problem: you need to fix a bug in an old release without dragging in newer work.</p>
+  </div>
+  <div class="prose">
+    <p>You shipped <code>snapshot-99</code> as version 1.0 and have made ten more snapshots since. A bug report arrives. You copy <code>snapshot-99</code> back into <code>working</code> and fix it. Now what do you call the result? <code>snapshot-110</code> would be a lie: it does not come after 109.</p>
+    <p>Look at a tree. Every twig, however far out, leads back to the trunk by one simple rule: go to the thing you grew from. So you add one line to each message file, the name of its <b>parent</b> snapshot. History stops being a line and becomes a tree.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 210" role="img" aria-label="Snapshots 97 to 99 in a line, then a fork: 100 to 109 continue upward, and a bug fix branches down from 99. Arrows point from child to parent.">
+      <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>
+      <line x1="122" y1="80" x2="62" y2="80" class="ln" marker-end="url(#a2)"/>
+      <line x1="212" y1="80" x2="152" y2="80" class="ln" marker-end="url(#a2)"/>
+      <line x1="302" y1="80" x2="242" y2="80" class="ln" marker-end="url(#a2)"/>
+      <line x1="392" y1="80" x2="332" y2="80" class="ln" marker-end="url(#a2)"/>
+      <line x1="590" y1="80" x2="512" y2="80" class="ln" marker-end="url(#a2)"/>
+      <text x="452" y="84" text-anchor="middle" class="t-m">· · ·</text>
+      <path d="M302 160 C 260 160, 245 110, 232 92" class="ln" marker-end="url(#a2)"/>
+      <circle cx="50" cy="80" r="11" class="nd"/><text x="50" y="112" text-anchor="middle" class="t">97</text>
+      <circle cx="140" cy="80" r="11" class="nd"/><text x="140" y="112" text-anchor="middle" class="t">98</text>
+      <circle cx="230" cy="80" r="11" class="nd"/><text x="230" y="58" text-anchor="middle" class="t">99</text>
+      <text x="230" y="40" text-anchor="middle" class="t-m">released as 1.0</text>
+      <circle cx="320" cy="80" r="11" class="nd"/><text x="320" y="112" text-anchor="middle" class="t">100</text>
+      <circle cx="410" cy="80" r="11" class="nd"/><text x="410" y="112" text-anchor="middle" class="t">101</text>
+      <circle cx="500" cy="80" r="11" class="nd"/>
+      <circle cx="602" cy="80" r="11" class="nd"/><text x="602" y="112" text-anchor="middle" class="t">109</text>
+      <circle cx="320" cy="160" r="11" class="nd-ring"/><text x="342" y="165" class="t">the 1.0.1 fix · parent: 99</text>
+      <text x="660" y="84" class="t-m">newest</text>
+    </svg>
+    <figcaption>Arrows point backward, from child to parent. A snapshot knows where it came from, never where history will go next.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>Every snapshot records its parent. Follow parents and you can trace any snapshot back to the very first one.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Every commit stores the ID of its parent. The first commit in a repository has none.</p>
+<pre>git log --oneline --graph --all   <span class="c"># draw the tree</span>
+git cat-file -p HEAD              <span class="c"># read a commit; look for the "parent" line</span></pre>
+  </div></details>
+</section>
+
+<!-- 3 -->
+<section class="wrap ch" id="c3">
+  <div class="ch-head">
+    <div class="num">Chapter 03</div>
+    <h2>Branch names</h2>
+    <p class="problem">Problem: with two lines of work, "the latest snapshot" no longer means one thing.</p>
+  </div>
+  <div class="prose">
+    <p>In a straight line, the highest number was the newest. In a tree, there is a newest snapshot at the end of every twig, and numbers can't tell you which twig is which.</p>
+    <p>You could list every snapshot that belongs to a line of work, but that is a lot of data and still doesn't tell you where the end is. The least you need is the <b>tip</b>. Everything else on the line can be found by walking parents. So you keep one file, <code>branches</code>, outside all snapshots, with one name and one snapshot per line.</p>
+    <p>There is one new chore: when you take a snapshot on a branch, you update that branch's line in the file to point at the new snapshot.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 220" role="img" aria-label="The same tree with two name labels, master on the upper tip and maint on the bug fix tip, and a branches file listing the pairs">
+      <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>
+      <line x1="112" y1="90" x2="52" y2="90" class="ln" marker-end="url(#a3)"/>
+      <line x1="202" y1="90" x2="142" y2="90" class="ln" marker-end="url(#a3)"/>
+      <line x1="292" y1="90" x2="232" y2="90" class="ln" marker-end="url(#a3)"/>
+      <path d="M202 165 C 165 165, 150 120, 141 102" class="ln" marker-end="url(#a3)"/>
+      <circle cx="40" cy="90" r="11" class="nd"/><circle cx="130" cy="90" r="11" class="nd"/>
+      <circle cx="220" cy="90" r="11" class="nd"/><circle cx="310" cy="90" r="11" class="nd"/>
+      <circle cx="220" cy="165" r="11" class="nd"/>
+      <rect x="276" y="40" width="68" height="22" rx="11" class="pill-b"/><text x="310" y="55" text-anchor="middle" class="tb">master</text>
+      <line x1="310" y1="62" x2="310" y2="77" class="ln"/>
+      <rect x="248" y="154" width="64" height="22" rx="11" class="pill-b"/><text x="280" y="169" text-anchor="middle" class="tb">maint</text>
+      <rect x="430" y="50" width="250" height="120" rx="5" class="box"/>
+      <text x="446" y="76" class="t-m">file: branches</text>
+      <line x1="446" y1="86" x2="664" y2="86" class="ln" style="stroke:var(--rule)"/>
+      <text x="446" y="112" class="tb">master</text><text x="530" y="112" class="t">→ snapshot-109</text>
+      <text x="446" y="140" class="tb">maint</text><text x="530" y="140" class="t">→ snapshot-110</text>
+    </svg>
+    <figcaption>A branch is not a container of snapshots. It is a name written next to one snapshot: the tip.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>A branch is a movable name for the newest snapshot on a line of work. Taking a snapshot moves the name forward.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Each branch really is a tiny text file: <code>.git/refs/heads/main</code> holds 40 hex characters and a newline. A second file, <code>.git/HEAD</code>, says which branch you are on, e.g. <code>ref: refs/heads/main</code>. That is how Git knows which name to move when you commit.</p>
+<pre>git branch maint &lt;id&gt;     <span class="c"># write a new name/snapshot line</span>
+git switch maint          <span class="c"># look up the name, copy that snapshot into working</span>
+git switch -c feature     <span class="c"># create a name at the current snapshot and switch to it</span>
+cat .git/refs/heads/main  <span class="c"># see for yourself</span></pre>
+  </div></details>
+</section>
+
+<!-- 4 -->
+<section class="wrap ch" id="c4">
+  <div class="ch-head">
+    <div class="num">Chapter 04</div>
+    <h2>Tags</h2>
+    <p class="problem">Problem: some names should follow the work, and some should stay put.</p>
+  </div>
+  <div class="prose">
+    <p>You notice you use names in two ways. "Release maintenance" should move as work continues. "Version 1.0" should mark one snapshot forever. Both are pointers to a snapshot, but one moves and one doesn't, and mixing them invites mistakes.</p>
+    <p>So the fixed ones get their own file, <code>tags</code>. Same format, different promise.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 170" role="img" aria-label="A branch label moves from an older snapshot to a newer one after a commit, while a tag label stays on its snapshot">
+      <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker>
+      <marker id="a4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--branch)"/></marker></defs>
+      <line x1="162" y1="95" x2="92" y2="95" class="ln" marker-end="url(#a4)"/>
+      <line x1="272" y1="95" x2="202" y2="95" class="ln" marker-end="url(#a4)"/>
+      <line x1="382" y1="95" x2="312" y2="95" class="ln" marker-end="url(#a4)"/>
+      <circle cx="80" cy="95" r="11" class="nd"/><circle cx="190" cy="95" r="11" class="nd"/>
+      <circle cx="300" cy="95" r="11" class="nd"/><circle cx="400" cy="95" r="11" class="nd-ring"/>
+      <rect x="152" y="120" width="76" height="22" rx="4" class="pill-t"/><text x="190" y="135" text-anchor="middle" class="tt">v1.0</text>
+      <rect x="266" y="40" width="68" height="22" rx="11" class="pill-b" style="opacity:.35"/><text x="300" y="55" text-anchor="middle" class="tb" style="opacity:.45">maint</text>
+      <path d="M336 51 C 360 40, 372 40, 372 48" class="ln" style="stroke:var(--branch)" marker-end="url(#a4b)"/>
+      <rect x="366" y="40" width="68" height="22" rx="11" class="pill-b"/><text x="400" y="55" text-anchor="middle" class="tb">maint</text>
+      <text x="470" y="58" class="t-m">branch: moves on every new snapshot</text>
+      <text x="470" y="134" class="t-m">tag: stays on one snapshot forever</text>
+      <text x="400" y="128" text-anchor="middle" class="t-m">new</text>
+    </svg>
+    <figcaption>Pills with round ends move. Square‑cornered tags don't. The rest of this guide keeps that shape language.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>A tag is a name that never moves. Use it to mark releases and other points you'll want to find again.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Tags live in <code>.git/refs/tags/</code>. An "annotated" tag also stores who tagged it, when, and a message.</p>
+<pre>git tag v1.0               <span class="c"># lightweight tag at the current snapshot</span>
+git tag -a v1.0.1 -m "Fix" <span class="c"># annotated tag</span>
+git switch --detach v1.0   <span class="c"># look at the code exactly as released</span></pre>
+  </div></details>
+</section>
+
+<!-- 5 -->
+<section class="wrap ch" id="c5">
+  <div class="ch-head">
+    <div class="num">Chapter 05</div>
+    <h2>Names from hashes</h2>
+    <p class="problem">Problem: a friend works on a copy, and you both create a different "snapshot-114".</p>
+  </div>
+  <div class="prose">
+    <p>Zoe joins the project. You give her copies of all your snapshots, branches and tags, and she disappears on a week‑long trip without internet. You both keep working. When she returns, you each have a <code>snapshot-114</code> and <code>snapshot-115</code> with different contents, and you can't even tell who wrote what.</p>
+    <p>Two fixes. First, every message file now includes the author's name and email. Second, a snapshot is no longer named by a counter. It is named by a <b>hash</b> of its message file: a fixed‑length fingerprint computed from the content. The message holds the date, the description, the author and the parent, so two different snapshots will never produce the same name, and the same snapshot gets the same name on every computer.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 200" role="img" aria-label="Left: two computers both create snapshot-114 with different content, a clash. Right: named by hashes, the two snapshots have different names and sit side by side.">
+      <rect x="20" y="30" width="150" height="54" rx="5" class="box"/><text x="95" y="52" text-anchor="middle" class="t-d">your computer</text><text x="95" y="72" text-anchor="middle" class="t">snapshot-114</text>
+      <rect x="20" y="116" width="150" height="54" rx="5" class="box"/><text x="95" y="138" text-anchor="middle" class="t-d">Zoe's computer</text><text x="95" y="158" text-anchor="middle" class="t">snapshot-114</text>
+      <path d="M180 60 L 236 100 M180 140 L 236 100" class="bad"/>
+      <text x="246" y="104" class="tbad">same name, different code</text>
+      <line x1="430" y1="20" x2="430" y2="180" class="ln" style="stroke:var(--rule)"/>
+      <circle cx="480" cy="100" r="11" class="nd"/>
+      <path d="M560 60 C 520 60, 500 80, 490 90" class="ln"/><path d="M560 140 C 520 140, 500 120, 490 110" class="ln"/>
+      <circle cx="570" cy="60" r="11" class="nd"/><text x="590" y="64" class="t">8ba3441…</text><text x="590" y="80" class="t-m">by you</text>
+      <circle cx="570" cy="140" r="11" class="nd"/><text x="590" y="144" class="t">db9ecb5…</text><text x="590" y="160" class="t-m">by Zoe</text>
+      <text x="480" y="132" text-anchor="middle" class="t-m">113</text>
+    </svg>
+    <figcaption>With content‑derived names, fetching Zoe's work is just copying her snapshots next to yours. Nothing collides, and the parents still connect them into one tree.</figcaption>
+  </figure>
+  <div class="panel" aria-labelledby="hash-title">
+    <div class="row" style="justify-content:space-between"><h3 id="hash-title" style="font-size:20px">Try it: fingerprint a message file</h3><span class="lbl">SHA‑1, computed in your browser</span></div>
+    <label for="hashIn" class="lbl">Message file contents</label>
+<textarea id="hashIn" rows="6">parent 8ba3441b6b89cad23387ee875f2ae55069291f4b
+author Zoe &lt;zoe@example.com&gt;
+date   2026-10-23 15:40
+
+Add prime number generator</textarea>
+    <div class="hash-out">
+      <div><span class="lbl">SHA‑1 of the text (the snapshot's name)</span><output id="hashRaw">…</output></div>
+      <div><span class="lbl">Git's blob ID for the same text, as <code>git hash-object</code> prints it</span><output id="hashBlob">…</output></div>
+    </div>
+    <p style="font-size:15px; color:var(--muted)">Change a single character, even the date, and the whole name changes. Git adds a small header (<code>blob</code>, the length, a zero byte) before hashing, which is why the two lines differ.</p>
+  </div>
+  <p class="rule"><small>The rule</small>A snapshot's name is a fingerprint of its content, including its parent. Same content, same name, everywhere.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Commit IDs are SHA‑1 hashes, 40 hex characters, usually shortened to 7. Newer Git can also create repositories that use SHA‑256. Sharing is copying snapshots you don't have yet:</p>
+<pre>git clone &lt;url&gt;        <span class="c"># copy every snapshot, branch and tag</span>
+git fetch origin       <span class="c"># copy Zoe's new snapshots next to yours</span>
+git push origin main   <span class="c"># copy yours to her, then move her branch name</span>
+git log --format="%h %an %s"   <span class="c"># short ID, author, message</span></pre>
+  </div></details>
+</section>
+
+<!-- 6 -->
+<section class="wrap ch" id="c6">
+  <div class="ch-head">
+    <div class="num">Chapter 06</div>
+    <h2>Working offline</h2>
+    <p class="problem">Problem: none, as it turns out. This one is a gift.</p>
+  </div>
+  <div class="prose">
+    <p>Zoe spends a lot of time on planes and boats. She loves your system because every everyday action happens on her own disk: taking snapshots, reading history, creating branches, switching between them, comparing versions. The network is needed only at the moment she wants to exchange snapshots with you.</p>
+    <p>This falls straight out of the design. Everyone holds the whole history, and names come from content, so no central server has to hand out the next number.</p>
+  </div>
+  <p class="rule"><small>The rule</small>Every copy of the repository is complete. Only sharing needs a connection.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+<pre><span class="c"># talk to the network</span>
+git clone   git fetch   git pull   git push
+
+<span class="c"># everything else is local, including</span>
+git commit  git log  git switch  git branch  git diff  git merge</pre>
+  </div></details>
+</section>
+
+<!-- 7 -->
+<section class="wrap ch" id="c7">
+  <div class="ch-head">
+    <div class="num">Chapter 07</div>
+    <h2>Merges</h2>
+    <p class="problem">Problem: two lines of work need to become one again.</p>
+  </div>
+  <div class="prose">
+    <p>Before her trip, you both started from the <code>math</code> branch. Zoe wrote a prime number generator; you wrote a magic number generator. Now you want one codebase with both.</p>
+    <p>You combine the two into <code>working</code> and take a snapshot. While writing its message file you notice something new: this snapshot has <b>two parents</b>, your latest and Zoe's latest. It adds nothing of its own beyond what it took to combine them. Once Zoe fetches it, your two histories are identical.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 200" role="img" aria-label="Two lines of snapshots, yours and Zoe's, from a common start, joined by a merge snapshot with two parent arrows">
+      <defs><marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>
+      <line x1="122" y1="100" x2="62" y2="100" class="ln" marker-end="url(#a7)"/>
+      <path d="M212 50 C 170 50, 160 80, 147 92" class="ln" marker-end="url(#a7)"/>
+      <path d="M212 150 C 170 150, 160 120, 147 108" class="ln" marker-end="url(#a7)"/>
+      <line x1="322" y1="50" x2="242" y2="50" class="ln" marker-end="url(#a7)"/>
+      <line x1="322" y1="150" x2="242" y2="150" class="ln" marker-end="url(#a7)"/>
+      <path d="M452 100 C 410 100, 380 60, 352 54" class="ln" marker-end="url(#a7)"/>
+      <path d="M452 100 C 410 100, 380 140, 352 146" class="ln" marker-end="url(#a7)"/>
+      <circle cx="50" cy="100" r="11" class="nd"/><circle cx="135" cy="100" r="11" class="nd"/>
+      <circle cx="230" cy="50" r="11" class="nd"/><circle cx="340" cy="50" r="11" class="nd"/>
+      <circle cx="230" cy="150" r="11" class="nd"/><circle cx="340" cy="150" r="11" class="nd"/>
+      <circle cx="465" cy="100" r="13" class="nd-ring"/><circle cx="465" cy="100" r="5" class="nd"/>
+      <text x="285" y="34" text-anchor="middle" class="t-m">you: magic numbers</text>
+      <text x="285" y="180" text-anchor="middle" class="t-m">Zoe: primes</text>
+      <text x="490" y="96" class="t">merge snapshot</text>
+      <text x="490" y="114" class="t-m">parent 1: your tip</text>
+      <text x="490" y="130" class="t-m">parent 2: Zoe's tip</text>
+      <rect x="430" y="44" width="66" height="22" rx="11" class="pill-b"/><text x="463" y="59" text-anchor="middle" class="tb">math</text>
+    </svg>
+    <figcaption>A merge is an ordinary snapshot with two parent lines in its message file.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>A merge is a snapshot with more than one parent. It ties separate lines of history back together.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>If your branch has no new snapshots of its own, Git doesn't need a merge snapshot at all. It just moves your branch name forward to the other tip. That is called a <b>fast‑forward</b>. You can try both cases on the workbench below.</p>
+<pre>git switch math
+git merge zoe/math         <span class="c"># creates a two-parent snapshot (or fast-forwards)</span>
+git log --graph --oneline  <span class="c"># see the lines join</span></pre>
+  </div></details>
+</section>
+
+<!-- 8 -->
+<section class="wrap ch" id="c8">
+  <div class="ch-head">
+    <div class="num">Chapter 08</div>
+    <h2>Rewriting history</h2>
+    <p class="problem">Problem: last night's three messy snapshots should have been two clean ones.</p>
+  </div>
+  <div class="prose">
+    <p>You coded late on a branch called <code>drunk</code> and made three snapshots full of mistakes and their corrections. You need a way to talk about them. If <code>drunk</code> names the tip, then <code>drunk^</code> means its parent and <code>drunk^^</code> its grandparent. The snapshot you started from is <code>drunk^^^</code>.</p>
+    <p>Snapshots are frozen, so you can't edit them. Instead you build new ones. Copy the final state into <code>working</code>, remove the new file, and snapshot that with <code>drunk^^^</code> as its parent. Then copy the final state again and snapshot it with the first new one as parent. Last, move the name <code>drunk</code> to the newest snapshot.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 230" role="img" aria-label="Three old snapshots, faded, still hang off the base. Two new clean snapshots also hang off the base, and the drunk branch name now points at the newer clean one.">
+      <defs><marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker>
+      <marker id="a8g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--ghost)"/></marker></defs>
+      <path d="M182 60 C 140 60, 120 90, 108 104" class="ln-ghost" marker-end="url(#a8g)"/>
+      <line x1="282" y1="60" x2="212" y2="60" class="ln-ghost" marker-end="url(#a8g)"/>
+      <line x1="382" y1="60" x2="312" y2="60" class="ln-ghost" marker-end="url(#a8g)"/>
+      <circle cx="200" cy="60" r="10" class="nd-ghost"/><circle cx="300" cy="60" r="10" class="nd-ghost"/><circle cx="400" cy="60" r="10" class="nd-ghost"/>
+      <text x="200" y="38" text-anchor="middle" class="t-m">drunk^^</text><text x="300" y="38" text-anchor="middle" class="t-m">drunk^</text><text x="400" y="38" text-anchor="middle" class="t-m">old drunk</text>
+      <text x="440" y="64" class="t-m">no name points here · still on disk</text>
+      <circle cx="95" cy="115" r="11" class="nd"/><text x="77" y="119" text-anchor="end" class="t">drunk^^^</text>
+      <path d="M232 170 C 160 170, 120 140, 106 127" class="ln" marker-end="url(#a8)"/>
+      <line x1="352" y1="170" x2="262" y2="170" class="ln" marker-end="url(#a8)"/>
+      <circle cx="250" cy="170" r="11" class="nd"/><circle cx="370" cy="170" r="11" class="nd"/>
+      <text x="250" y="202" text-anchor="middle" class="t-m">change function</text>
+      <text x="370" y="202" text-anchor="middle" class="t-m">add new file</text>
+      <rect x="400" y="159" width="64" height="22" rx="11" class="pill-b"/><text x="432" y="174" text-anchor="middle" class="tb">drunk</text>
+    </svg>
+    <figcaption>"Rewriting" never changes a snapshot. It makes new ones and moves a name. The old ones are just unnamed.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>History is rewritten by creating new snapshots and moving a branch name to them. Old snapshots stay until deleted.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Git also writes <code>HEAD~3</code> for <code>HEAD^^^</code>. Rewrite only snapshots nobody else has fetched yet: if Zoe built on the old ones, her history and yours will disagree.</p>
+<pre>git rebase -i drunk~3      <span class="c"># reorder, squash, split the last three</span>
+git commit --amend         <span class="c"># replace the tip with a corrected snapshot</span>
+git reset --soft HEAD~3    <span class="c"># move the name back, keep the changes staged</span></pre>
+  </div></details>
+</section>
+
+<!-- workbench -->
+<section class="bench" id="bench">
+  <div class="wrap bench-intro">
+    <div class="ch-head">
+      <div class="num">The workbench</div>
+      <h2>Run your system</h2>
+    </div>
+    <div class="prose">
+      <p>Chapters 1 to 8, live. Take snapshots, create and switch branches, add tags and merge.</p>
+      <p>Keep an eye on the three small files on the right. Creating, moving or deleting a branch or tag changes only those files; no snapshot is touched.</p>
+      <p>Click any snapshot to read its message file. Then delete a branch: its snapshots stay behind, faded, and you can give them a name again.</p>
+    </div>
+  </div>
+  <div class="wrap" style="display:grid; gap:18px; width:100%">
+  <div class="bench-grid">
+    <div style="display:grid; gap:12px; min-width:0">
+      <div class="graph" id="graph" aria-live="polite"></div>
+      <div class="panel controls">
+        <div class="row">
+          <label for="msg" class="lbl" style="min-width:80px">Snapshot</label>
+          <input type="text" id="msg" placeholder="message" style="flex:1 1 160px">
+          <button class="btn primary" id="bCommit">Take snapshot</button>
+        </div>
+        <div class="row">
+          <label for="newBranch" class="lbl" style="min-width:80px">Branch</label>
+          <input type="text" id="newBranch" placeholder="new name" style="flex:1 1 120px">
+          <button class="btn amber" id="bBranch">Create &amp; switch</button>
+          <select id="swSel" aria-label="Branch to switch to"></select>
+          <button class="btn amber" id="bSwitch">Switch</button>
+        </div>
+        <div class="row">
+          <label for="mergeSel" class="lbl" style="min-width:80px">Merge</label>
+          <select id="mergeSel" aria-label="Branch to merge into the current one"></select>
+          <button class="btn" id="bMerge">Merge into current</button>
+          <button class="btn" id="bDelete">Delete current branch…</button>
+          <span class="hint" id="mergeHint">Create a second branch to merge or delete one.</span>
+        </div>
+        <div class="row">
+          <label for="tagName" class="lbl" style="min-width:80px">Tag</label>
+          <input type="text" id="tagName" placeholder="e.g. v1.1" style="flex:1 1 120px">
+          <button class="btn violet" id="bTag">Tag current snapshot</button>
+          <button class="btn" id="bReset" style="margin-left:auto">Reset bench</button>
+        </div>
+        <div class="note" id="log" role="status"></div>
+      </div>
+    </div>
+    <aside class="side" aria-label="Files the system keeps">
+      <div class="file"><div class="path">branches · .git/refs/heads/*</div><pre id="fBranches"></pre></div>
+      <div class="file"><div class="path">tags · .git/refs/tags/*</div><pre id="fTags"></pre></div>
+      <div class="file"><div class="path">HEAD · .git/HEAD</div><pre id="fHead"></pre></div>
+      <div class="file"><div class="path" id="selPath">message file of selected snapshot</div><pre id="fSel"></pre><div class="row" id="selActions" style="margin-top:8px"></div></div>
+    </aside>
+  </div>
+  <p style="font-family:var(--f-mono); font-size:12px; color:var(--muted)">IDs on the bench are short demo fingerprints, not real SHA‑1. Faded dashed snapshots are unreachable: no branch or tag leads to them.</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="wrap ch" id="c9">
+  <div class="ch-head">
+    <div class="num">Chapter 09</div>
+    <h2>The staging area</h2>
+    <p class="problem">Problem: halfway through, your working folder holds two unrelated changes that deserve separate snapshots.</p>
+  </div>
+  <div class="prose">
+    <p>You add a third folder between <code>working</code> and the snapshots: <code>staging</code>. After each snapshot, staging starts as a copy of it. Whenever you finish a change in working, you decide whether it belongs in the next snapshot. If yes, you repeat that change in staging. If not, you leave it in working for later. Snapshots are now made from <b>staging</b>, not from working.</p>
+    <p>There is one trap. Stage your README edit, keep working, then edit README again. Staging still holds the first edit. Snapshot now, and the second edit is missing. Try it below.</p>
+  </div>
+  <div class="panel">
+    <div class="scroll-x"><div class="stage-wrap">
+      <div class="stage-grid" id="stage"></div>
+    </div></div>
+    <div class="row">
+      <button class="btn primary" id="sCommit">Snapshot from staging</button>
+      <button class="btn" id="sReset">Reset</button>
+      <span class="lbl" id="sCount" style="margin-left:auto"></span>
+    </div>
+    <div class="note" id="sLog" role="status">Edit README, stage it, then edit it again before taking a snapshot.</div>
+  </div>
+  <p class="rule"><small>The rule</small>The next snapshot is exactly what's in staging. Every edit has to be staged to be included, even a second edit to a file you already staged.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Git calls staging the <b>index</b>. It's a single file, <code>.git/index</code>, rather than a folder, but it plays exactly this role.</p>
+<pre>git add README.md         <span class="c"># copy this version into staging</span>
+git add -p                <span class="c"># stage only some hunks of a file</span>
+git restore --staged app.py   <span class="c"># take it back out of staging</span>
+git commit -m "Docs"      <span class="c"># snapshot = staging</span>
+git status                <span class="c"># which files differ, and where</span></pre>
+  </div></details>
+</section>
+
+<!-- 10 -->
+<section class="wrap ch" id="c10">
+  <div class="ch-head">
+    <div class="num">Chapter 10</div>
+    <h2>Diffs</h2>
+    <p class="problem">Problem: with three places your code can live, you lose track of what changed where.</p>
+  </div>
+  <div class="prose">
+    <p>A message tells you <i>what</i> you meant to change, not which lines changed. So you write a small program that compares two folders line by line. Four comparisons come up all the time.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 230" role="img" aria-label="Three boxes: working, staging, last snapshot. Arrows label the comparisons: working vs staging is git diff, staging vs snapshot is git diff --staged, a snapshot vs its parent is git show, branch vs branch is git diff a..b">
+      <rect x="30" y="40" width="160" height="64" rx="5" class="box"/><text x="110" y="78" text-anchor="middle" class="t-d">working</text>
+      <rect x="280" y="40" width="160" height="64" rx="5" class="box"/><text x="360" y="78" text-anchor="middle" class="t-d">staging</text>
+      <rect x="530" y="40" width="160" height="64" rx="5" class="box-c"/><text x="610" y="78" text-anchor="middle" class="t-d">last snapshot</text>
+      <path d="M190 72 L 280 72" class="ln"/><text x="235" y="128" text-anchor="middle" class="t">git diff</text><text x="235" y="146" text-anchor="middle" class="t-m">what's left to stage</text>
+      <path d="M440 72 L 530 72" class="ln"/><text x="485" y="128" text-anchor="middle" class="t">git diff --staged</text><text x="485" y="146" text-anchor="middle" class="t-m">what the next snapshot adds</text>
+      <line x1="30" y1="178" x2="690" y2="178" class="ln" style="stroke:var(--rule)"/>
+      <text x="30" y="206" class="t">git show &lt;id&gt;</text><text x="160" y="206" class="t-m">a snapshot vs its parent: its changeset</text>
+      <text x="420" y="206" class="t">git diff main..feat</text><text x="580" y="206" class="t-m">branch vs branch</text>
+    </svg>
+    <figcaption>Every diff is a comparison between two of these places. Knowing which two answers most "why isn't my change there?" questions.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>A diff compares two snapshots of files. Pick the two places, and you know which diff to ask for.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+<pre>git diff                  <span class="c"># working vs staging</span>
+git diff --staged         <span class="c"># staging vs last snapshot</span>
+git diff HEAD             <span class="c"># working vs last snapshot</span>
+git show a1b2c3d          <span class="c"># what that snapshot introduced</span>
+git diff main..feature    <span class="c"># how far two branches have drifted</span></pre>
+  </div></details>
+</section>
+
+<!-- 11 -->
+<section class="wrap ch" id="c11">
+  <div class="ch-head">
+    <div class="num">Chapter 11</div>
+    <h2>Objects, not copies</h2>
+    <p class="problem">Problem: hundreds of near‑identical project copies are filling the disk.</p>
+  </div>
+  <div class="prose">
+    <p>Most files don't change between snapshots, yet you store them again every time. Hashes fix this too. Make one folder, <code>objects</code>, and store each file there under the hash of its contents. That stored file is a <b>blob</b>. If an object with that name already exists, you already have it, and you skip it.</p>
+    <p>A folder becomes a small list: for each entry, the word <code>blob</code> or <code>tree</code>, a hash, and a name. That list is stored as an object too, a <b>tree</b>. Work from the deepest folder upward and you end with one root tree. Its hash goes into the message file, which is itself stored as an object: the snapshot. Since that hash now covers every file, two snapshots with the same name are guaranteed to hold the same files. You can delete the old snapshot folders and rebuild any of them from <code>objects</code>.</p>
+  </div>
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Two snapshots each point to a root tree. The second snapshot changed only README, so it has one new root tree and one new README blob, and reuses the src tree and the other blobs.">
+      <defs><marker id="a11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>
+      <!-- commits -->
+      <rect x="80" y="16" width="130" height="40" rx="5" class="box-c"/><text x="145" y="34" text-anchor="middle" class="t">snapshot 1</text><text x="145" y="49" text-anchor="middle" class="t-m">tree 4f2c…</text>
+      <rect x="420" y="16" width="130" height="40" rx="5" class="box-new"/><text x="485" y="34" text-anchor="middle" class="t">snapshot 2</text><text x="485" y="49" text-anchor="middle" class="t-m">tree 91ad… · parent 1</text>
+      <line x1="420" y1="36" x2="214" y2="36" class="ln" marker-end="url(#a11)"/>
+      <!-- trees -->
+      <rect x="95" y="96" width="100" height="36" rx="5" class="box"/><text x="145" y="119" text-anchor="middle" class="t">tree (root)</text>
+      <rect x="435" y="96" width="100" height="36" rx="5" class="box-new"/><text x="485" y="119" text-anchor="middle" class="t">tree (root)</text>
+      <line x1="145" y1="56" x2="145" y2="92" class="ln" marker-end="url(#a11)"/>
+      <line x1="485" y1="56" x2="485" y2="92" class="ln" marker-end="url(#a11)"/>
+      <rect x="290" y="176" width="100" height="36" rx="5" class="box"/><text x="340" y="199" text-anchor="middle" class="t">tree src/</text>
+      <!-- blobs -->
+      <rect x="20" y="176" width="110" height="36" rx="5" class="box"/><text x="75" y="199" text-anchor="middle" class="t">blob README</text>
+      <rect x="560" y="176" width="140" height="36" rx="5" class="box-new"/><text x="630" y="199" text-anchor="middle" class="t">blob README (new)</text>
+      <rect x="160" y="176" width="110" height="36" rx="5" class="box"/><text x="215" y="199" text-anchor="middle" class="t">blob setup.py</text>
+      <rect x="230" y="250" width="100" height="36" rx="5" class="box"/><text x="280" y="273" text-anchor="middle" class="t">blob app.py</text>
+      <rect x="350" y="250" width="100" height="36" rx="5" class="box"/><text x="400" y="273" text-anchor="middle" class="t">blob util.py</text>
+      <!-- edges from root1 -->
+      <line x1="125" y1="132" x2="85" y2="172" class="ln" marker-end="url(#a11)"/>
+      <line x1="155" y1="132" x2="205" y2="172" class="ln" marker-end="url(#a11)"/>
+      <line x1="180" y1="132" x2="300" y2="174" class="ln" marker-end="url(#a11)"/>
+      <!-- edges from root2 -->
+      <line x1="510" y1="132" x2="600" y2="172" class="ln" marker-end="url(#a11)"/>
+      <line x1="460" y1="132" x2="385" y2="174" class="ln" marker-end="url(#a11)" style="stroke:var(--branch)"/>
+      <path d="M445 132 C 380 150, 300 160, 262 174" class="ln" marker-end="url(#a11)" style="stroke:var(--branch)"/>
+      <!-- src -->
+      <line x1="325" y1="212" x2="295" y2="246" class="ln" marker-end="url(#a11)"/>
+      <line x1="355" y1="212" x2="385" y2="246" class="ln" marker-end="url(#a11)"/>
+      <text x="500" y="262" class="t-m">amber = new objects in snapshot 2</text>
+      <text x="500" y="280" class="t-m">amber lines = reused, not copied</text>
+    </svg>
+    <figcaption>Snapshot 2 changed one file. It cost three new objects (snapshot, root tree, one blob). Everything else is shared by reference.</figcaption>
+  </figure>
+  <p class="rule"><small>The rule</small>Git stores three kinds of object, all named by hash: blobs (file contents), trees (folders) and commits (snapshots). Unchanged content is stored once and shared.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+    <p>Git also keeps file names in trees, not in blobs, so renaming a file reuses its blob.</p>
+<pre>git cat-file -t HEAD            <span class="c"># commit</span>
+git cat-file -p HEAD            <span class="c"># tree, parent, author, message</span>
+git cat-file -p HEAD^{tree}     <span class="c"># the root tree's entries</span>
+git ls-tree -r HEAD             <span class="c"># every blob in the snapshot</span>
+ls .git/objects                 <span class="c"># the objects folder itself</span></pre>
+  </div></details>
+</section>
+
+<!-- 12 -->
+<section class="wrap ch" id="c12">
+  <div class="ch-head">
+    <div class="num">Chapter 12</div>
+    <h2>Compression</h2>
+    <p class="problem">Problem: even deduplicated, source code is a lot of text.</p>
+  </div>
+  <div class="prose">
+    <p>Text compresses very well, so you compress every object before writing it to disk. One detail is worth getting right: real Git computes the hash on the <i>uncompressed</i> content and then compresses with zlib (DEFLATE). That way an object's name depends only on what it contains, not on how it was squeezed.</p>
+    <p>Git goes one step further than the story. From time to time it packs many objects into a single <b>packfile</b> and stores similar versions of a file as differences from one another. Snapshots are still whole snapshots in concept; deltas are only a storage trick.</p>
+  </div>
+  <p class="rule"><small>The rule</small>Objects are named by their content and stored compressed. How they are stored never changes their names.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+<pre>git count-objects -vH   <span class="c"># loose objects vs packed, and their sizes</span>
+git gc                  <span class="c"># pack objects and clean up</span></pre>
+  </div></details>
+</section>
+
+<!-- 13 -->
+<section class="wrap ch" id="c13">
+  <div class="ch-head">
+    <div class="num">Chapter 13</div>
+    <h2>Nothing is lost</h2>
+    <p class="problem">Problem: you deleted a branch, or a rewrite went wrong, and work seems gone.</p>
+  </div>
+  <div class="prose">
+    <p>Look back at what you built. Deleting a branch removes one line from the <code>branches</code> file. A rewrite moves a name. Neither touches a single object. Committed work is still in <code>objects</code>; you only need its hash to put a name on it again.</p>
+    <p>Git helps you find that hash. It keeps a diary, the <b>reflog</b>, of every position each branch and HEAD has pointed to. On the workbench, delete a branch and click the faded snapshot: you'll get the same rescue Git gives you.</p>
+  </div>
+  <p class="rule"><small>The rule</small>Committed work is almost impossible to lose. Names come and go; objects stay until Git's cleanup removes old unreachable ones, which by default waits weeks.</p>
+  <details class="git"><summary>In real Git</summary><div class="git-body">
+<pre>git reflog                    <span class="c"># where HEAD has been, newest first</span>
+git reflog show feature       <span class="c"># where one branch has been</span>
+git branch rescue a1b2c3d     <span class="c"># name the lost snapshot again</span></pre>
+    <p>Uncommitted edits in working are the exception: they were never snapshotted, so there is nothing to recover. Commit early and often.</p>
+  </div></details>
+</section>
+
+<!-- map -->
+<section class="wrap ch" id="map">
+  <div class="ch-head">
+    <div class="num">The full map</div>
+    <h2>What you invented, and what Git calls it</h2>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>You built</th><th>Git calls it</th><th>Where it lives</th><th>Commands</th></tr></thead>
+      <tbody>
+        <tr><td>snapshot + message file</td><td>commit</td><td>an object in <code>.git/objects</code></td><td><code>git commit</code>, <code>git log</code></td></tr>
+        <tr><td>parent line</td><td>parent</td><td>inside the commit</td><td><code>git log --graph</code></td></tr>
+        <tr><td>branches file</td><td>branch / ref</td><td><code>.git/refs/heads/</code></td><td><code>git branch</code>, <code>git switch</code></td></tr>
+        <tr><td>tags file</td><td>tag</td><td><code>.git/refs/tags/</code></td><td><code>git tag</code></td></tr>
+        <tr><td>"which branch am I on"</td><td>HEAD</td><td><code>.git/HEAD</code></td><td><code>git status</code></td></tr>
+        <tr><td>name from a hash</td><td>object ID (SHA‑1)</td><td>everywhere</td><td><code>git hash-object</code></td></tr>
+        <tr><td>copy Zoe's snapshots</td><td>fetch / push / clone</td><td>remotes</td><td><code>git fetch</code>, <code>git push</code></td></tr>
+        <tr><td>two‑parent snapshot</td><td>merge commit</td><td>an object</td><td><code>git merge</code></td></tr>
+        <tr><td>new snapshots, move name</td><td>rebase / amend / reset</td><td>refs + new objects</td><td><code>git rebase -i</code></td></tr>
+        <tr><td>staging folder</td><td>index</td><td><code>.git/index</code></td><td><code>git add</code>, <code>git restore --staged</code></td></tr>
+        <tr><td>folder comparison</td><td>diff</td><td>computed on demand</td><td><code>git diff</code>, <code>git show</code></td></tr>
+        <tr><td>file contents / folder lists</td><td>blob / tree</td><td><code>.git/objects</code></td><td><code>git cat-file -p</code></td></tr>
+        <tr><td>diary of name moves</td><td>reflog</td><td><code>.git/logs/</code></td><td><code>git reflog</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prose">From here, any Git command is a combination of a few moves: write objects, move a name, copy a snapshot into working or staging, compare two places, or copy objects between computers. When a command feels like magic, ask which of those it is doing.</p>
+</section>
+</main>
+
+<script>
+/* ---------- Hash demo ---------- */
+(function(){
+  const inp = document.getElementById('hashIn'), oRaw = document.getElementById('hashRaw'), oBlob = document.getElementById('hashBlob');
+  const hex = b => Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  async function run(){
+    if(!(window.crypto && crypto.subtle)){ oRaw.textContent = oBlob.textContent = 'Hashing is not available in this browser view.'; return; }
+    try{
+      const enc = new TextEncoder(); const body = enc.encode(inp.value);
+      const head = enc.encode('blob ' + body.length + '\0');
+      const both = new Uint8Array(head.length + body.length); both.set(head); both.set(body, head.length);
+      oRaw.textContent = hex(await crypto.subtle.digest('SHA-1', body));
+      oBlob.textContent = hex(await crypto.subtle.digest('SHA-1', both));
+    }catch(e){ oRaw.textContent = oBlob.textContent = 'Hashing is not available in this browser view.'; }
+  }
+  inp.addEventListener('input', run); run();
+})();
+
+/* ---------- Staging demo ---------- */
+(function(){
+  const grid = document.getElementById('stage'), log = document.getElementById('sLog'), cnt = document.getElementById('sCount');
+  let F, snaps;
+  function reset(){ F = {'README.md':{w:1,s:1,c:1}, 'app.py':{w:1,s:1,c:1}, 'notes.txt':{w:1,s:1,c:1}}; snaps = 1; render(); log.textContent = 'Edit README, stage it, then edit it again before taking a snapshot.'; }
+  function status(f){
+    const a=[]; if(f.w!==f.s) a.push('unstaged edit'); if(f.s!==f.c) a.push('staged');
+    return a.length? a.join(' + ') : 'clean';
+  }
+  function render(){
+    let h = '<div class="h">file</div><div class="h">working</div><div class="h">staging</div><div class="h">snapshot</div><div class="h">actions</div>';
+    for(const [n,f] of Object.entries(F)){
+      h += `<div>${n}</div>
+      <div><span class="ver ${f.w!==f.s?'diff':''}">v${f.w}</span></div>
+      <div><span class="ver ${f.s!==f.c?'diff':''}">v${f.s}</span></div>
+      <div><span class="ver">v${f.c}</span></div>
+      <div style="flex-wrap:wrap"><button class="btn" data-e="${n}">Edit</button><button class="btn amber" data-s="${n}" ${f.w===f.s?'disabled':''}>Stage</button><span class="status">${status(f)}</span></div>`;
+    }
+    grid.innerHTML = h; cnt.textContent = 'snapshots taken: ' + snaps;
+  }
+  grid.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    if(b.dataset.e){ const f=F[b.dataset.e]; f.w++; log.innerHTML = `Edited <b>${b.dataset.e}</b> in working → v${f.w}. <span class="cmd">git diff</span> now shows it.`; }
+    if(b.dataset.s){ const f=F[b.dataset.s]; f.s=f.w; log.innerHTML = `Copied <b>${b.dataset.s}</b> v${f.s} into staging. <span class="cmd">git add ${b.dataset.s}</span>`; }
+    render();
+  });
+  document.getElementById('sCommit').addEventListener('click', ()=>{
+    const changed = Object.entries(F).filter(([n,f])=>f.s!==f.c);
+    if(!changed.length){ log.innerHTML = 'Staging matches the last snapshot, so there is nothing to snapshot. Stage something first.'; return; }
+    const left = Object.entries(F).filter(([n,f])=>f.w!==f.s);
+    changed.forEach(([n,f])=>f.c=f.s); snaps++;
+    let m = `Snapshot taken with ${changed.map(([n,f])=>`<b>${n} v${f.c}</b>`).join(', ')}. <span class="cmd">git commit</span>`;
+    if(left.length) m += `<br>Left behind in working: ${left.map(([n,f])=>`${n} v${f.w}`).join(', ')}. That edit was never staged, so it isn't in the snapshot.`;
+    log.innerHTML = m; render();
+  });
+  document.getElementById('sReset').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- Workbench ---------- */
+(function(){
+  const $ = id => document.getElementById(id);
+  let S;
+  function h7(s){ let a=0x811c9dc5, b=0x01000193^s.length; for(let i=0;i<s.length;i++){ const c=s.charCodeAt(i); a=Math.imul(a^c,0x01000193)>>>0; b=Math.imul(b^(c+i),0x5bd1e995)>>>0; } return ((a^b)>>>0).toString(16).padStart(8,'0').slice(0,7); }
+  function headId(){ return S.branches[S.head]; }
+  function laneFor(br){ if(!(br in S.lanes)) S.lanes[br] = S.nextLane++; return S.lanes[br]; }
+  function mk(parents, msg, br){
+    S.n++;
+    const id = h7(parents.join(',')+'|'+msg+'|'+S.n);
+    const depth = parents.length ? Math.max(...parents.map(p=>S.c[p].depth))+1 : 0;
+    S.c[id] = {id, parents, msg, depth, lane: laneFor(br), n:S.n, date: S.n};
+    S.order.push(id); return id;
+  }
+  function reset(){
+    S = {c:{}, order:[], branches:{}, tags:{}, head:'main', lanes:{}, nextLane:0, n:0, sel:null, reflog:[]};
+    let a = mk([], 'Start project', 'main');
+    let b = mk([a], 'Add parser', 'main'); S.tags['v1.0'] = b;
+    let c = mk([b], 'Add tests', 'main');
+    S.branches.main = c; S.sel = c;
+    say('Three snapshots on <b>main</b>, with <b>v1.0</b> tagged on the second. Take a snapshot, or create a branch first.');
+    render();
+  }
+  function say(h){ $('log').innerHTML = h; }
+  function isAnc(a, b){ // is a an ancestor of (or equal to) b
+    const st=[b], seen=new Set();
+    while(st.length){ const x=st.pop(); if(x===a) return true; if(seen.has(x)) continue; seen.add(x); st.push(...S.c[x].parents); }
+    return false;
+  }
+  function reachable(){
+    const r=new Set(), st=[...Object.values(S.branches), ...Object.values(S.tags)];
+    while(st.length){ const x=st.pop(); if(r.has(x)) continue; r.add(x); st.push(...S.c[x].parents); }
+    return r;
+  }
+  function validName(n){ return /^[A-Za-z0-9][A-Za-z0-9._\/-]{0,24}$/.test(n); }
+
+  function commit(){
+    const msg = ($('msg').value.trim() || ('Snapshot ' + (S.n+1)));
+    const p = headId(); const id = mk([p], msg, S.head);
+    S.branches[S.head] = id; S.sel = id; $('msg').value='';
+    say(`New snapshot <b>${id}</b>, parent ${p}. Then the <b>branches</b> file line for <b>${S.head}</b> moved to ${id}. <span class="cmd">git commit -m "${esc(msg)}"</span>`);
+    render();
+  }
+  function branch(){
+    const n = $('newBranch').value.trim();
+    if(!validName(n)){ say('Branch names use letters, digits, dot, dash, slash or underscore, up to 25 characters.'); return; }
+    if(S.branches[n]){ say(`A branch called <b>${esc(n)}</b> already exists. Pick another name or switch to it.`); return; }
+    S.branches[n] = headId(); S.head = n; $('newBranch').value='';
+    say(`Added one line to <b>branches</b>: ${esc(n)} → ${S.branches[n]}. HEAD now names ${esc(n)}. No snapshot was copied or created. <span class="cmd">git switch -c ${esc(n)}</span>`);
+    render();
+  }
+  function sw(){
+    const n = $('swSel').value; if(!n || n===S.head) { say('You are already on that branch.'); return; }
+    S.head = n; S.sel = S.branches[n];
+    say(`Looked up <b>${esc(n)}</b> in branches (${S.branches[n]}), copied that snapshot into working, and pointed HEAD at it. <span class="cmd">git switch ${esc(n)}</span>`);
+    render();
+  }
+  function merge(){
+    const o = $('mergeSel').value; if(!o){ say('Create a second branch first, then you can merge it.'); return; }
+    const cur = headId(), other = S.branches[o];
+    if(isAnc(other, cur)){ say(`<b>${esc(o)}</b> is already part of <b>${esc(S.head)}</b>'s history. Nothing to merge.`); return; }
+    if(isAnc(cur, other)){
+      S.branches[S.head] = other; S.sel = other;
+      say(`Fast‑forward: <b>${esc(S.head)}</b> had nothing new of its own, so its name just moved to ${other}. No merge snapshot needed. <span class="cmd">git merge ${esc(o)}</span>`);
+      render(); return;
+    }
+    const id = mk([cur, other], `Merge ${o} into ${S.head}`, S.head);
+    S.branches[S.head] = id; S.sel = id;
+    say(`Merge snapshot <b>${id}</b> with two parents: ${cur} (${esc(S.head)}) and ${other} (${esc(o)}). <span class="cmd">git merge ${esc(o)}</span>`);
+    render();
+  }
+  function tag(){
+    const n = $('tagName').value.trim();
+    if(!validName(n)){ say('Tag names use letters, digits, dot, dash, slash or underscore, up to 25 characters.'); return; }
+    if(S.tags[n]){ say(`Tag <b>${esc(n)}</b> already exists, and tags don't move. Choose a new name.`); return; }
+    S.tags[n] = headId(); $('tagName').value='';
+    say(`Added <b>${esc(n)}</b> → ${S.tags[n]} to the <b>tags</b> file. It will stay there as you keep committing. <span class="cmd">git tag ${esc(n)}</span>`);
+    render();
+  }
+  let delArmed = false;
+  function del(){
+    const names = Object.keys(S.branches);
+    if(names.length < 2){ say('This is the only branch. Create another one first, so there is somewhere to stand after deleting.'); return; }
+    if(!delArmed){ delArmed = true; $('bDelete').textContent = `Confirm delete "${S.head}"`; say(`Click again to delete <b>${esc(S.head)}</b>. Only its line in the branches file goes away.`); return; }
+    delArmed = false; $('bDelete').textContent = 'Delete current branch…';
+    const gone = S.head, tip = S.branches[gone];
+    delete S.branches[gone];
+    S.head = S.branches.main ? 'main' : Object.keys(S.branches)[0];
+    S.sel = tip;
+    const lost = !reachable().has(tip);
+    say(`Removed the line <b>${esc(gone)}</b> → ${tip}. You're now on <b>${esc(S.head)}</b>. ${lost ? 'The snapshots are still there, faded, because no name reaches them. Click the faded tip and choose "Name it again". <span class="cmd">git reflog</span> is how you find the ID in real Git.' : 'Those snapshots are still reachable from another name.'}`);
+    render();
+  }
+  function rescue(id){
+    let k = 1; while(S.branches['rescue-'+k]) k++;
+    const n = 'rescue-'+k; S.branches[n] = id; S.head = n; S.sel = id;
+    say(`Wrote <b>${n}</b> → ${id} into branches. The lost work is back. <span class="cmd">git switch -c ${n} ${id}</span>`);
+    render();
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  function render(){
+    const R = reachable();
+    const ids = S.order;
+    const maxD = Math.max(...ids.map(i=>S.c[i].depth));
+    const lanes = S.nextLane;
+    const DX = 92, DY = 78, X0 = 44, Y0 = 62;
+    const W = Math.max(560, X0 + (maxD+1)*DX + 90), H = Y0 + lanes*DY + 20;
+    const pos = id => [X0 + S.c[id].depth*DX, Y0 + S.c[id].lane*DY];
+    let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Snapshot graph with ${ids.length} snapshots">`;
+    s += `<defs><marker id="wb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker></defs>`;
+    // edges child -> parent
+    for(const id of ids){
+      const [x,y] = pos(id); const ghost = !R.has(id);
+      for(const p of S.c[id].parents){
+        const [px,py] = pos(p);
+        const sx = x-13, ex = px+15;
+        const d = py===y ? `M${sx} ${y} L${ex} ${py}` : `M${sx} ${y} C ${(sx+ex)/2} ${y}, ${(sx+ex)/2} ${py}, ${ex} ${py}`;
+        s += `<path d="${d}" class="${ghost?'ln-ghost':'ln'}" marker-end="url(#wb)"/>`;
+      }
+    }
+    // nodes
+    for(const id of ids){
+      const [x,y] = pos(id); const ghost = !R.has(id); const c = S.c[id];
+      const sel = S.sel===id;
+      s += `<g class="cnode" tabindex="0" role="button" data-id="${id}" aria-label="Snapshot ${id}: ${esc(c.msg)}">`;
+      if(sel) s += `<circle cx="${x}" cy="${y}" r="16" fill="none" style="stroke:var(--ink);stroke-width:1.5;stroke-dasharray:3 3"/>`;
+      s += c.parents.length>1 ? `<circle cx="${x}" cy="${y}" r="11" class="nd-ring" ${ghost?'style="stroke:var(--ghost)"':''}/><circle cx="${x}" cy="${y}" r="4.5" class="${ghost?'nd-ghost':'nd'}"/>`
+                              : `<circle cx="${x}" cy="${y}" r="11" class="${ghost?'nd-ghost':'nd'}"/>`;
+      s += `<text x="${x}" y="${y+28}" text-anchor="middle" class="t-m">${id}</text></g>`;
+    }
+    // labels: branches above, tags below id
+    const above = {}, below = {};
+    for(const [n,id] of Object.entries(S.branches)) (above[id] ||= []).push(n);
+    for(const [n,id] of Object.entries(S.tags)) (below[id] ||= []).push(n);
+    for(const [id, ns] of Object.entries(above)){
+      const [x,y] = pos(id);
+      ns.sort((a,b)=> (b===S.head) - (a===S.head));
+      ns.forEach((n,i)=>{
+        const txt = n===S.head ? 'HEAD→'+n : n; const w = txt.length*7.2+16;
+        const ly = y - 34 - i*22;
+        s += `<rect x="${x-w/2}" y="${ly-11}" width="${w}" height="20" rx="10" class="pill-b" ${n===S.head?'style="stroke:var(--head);stroke-width:1.8"':''}/>`;
+        s += `<text x="${x}" y="${ly+3}" text-anchor="middle" class="tb">${n===S.head?'<tspan style="fill:var(--head)">HEAD→</tspan>':''}${esc(n)}</text>`;
+      });
+    }
+    for(const [id, ns] of Object.entries(below)){
+      const [x,y] = pos(id);
+      ns.forEach((n,i)=>{
+        const w = n.length*7.2+16; const ly = y + 46 + i*22;
+        s += `<rect x="${x-w/2}" y="${ly-11}" width="${w}" height="20" rx="3" class="pill-t"/><text x="${x}" y="${ly+3}" text-anchor="middle" class="tt">${esc(n)}</text>`;
+      });
+    }
+    // compute height to include labels
+    let minY = 0, maxY = H;
+    for(const [id,ns] of Object.entries(above)){ minY = Math.min(minY, pos(id)[1] - 34 - (ns.length-1)*22 - 14); }
+    for(const [id,ns] of Object.entries(below)){ maxY = Math.max(maxY, pos(id)[1] + 46 + (ns.length-1)*22 + 14); }
+    s = s.replace(`height="${H}" viewBox="0 0 ${W} ${H}"`, `height="${maxY-minY}" viewBox="0 ${minY} ${W} ${maxY-minY}"`);
+    s += '</svg>';
+    $('graph').innerHTML = s;
+    const tip = $('graph'); tip.scrollLeft = tip.scrollWidth;
+
+    // files
+    const pad = (n,l) => n + ' '.repeat(Math.max(1, l-n.length));
+    const bl = Object.keys(S.branches).reduce((m,n)=>Math.max(m,n.length),0)+2;
+    $('fBranches').textContent = Object.entries(S.branches).map(([n,id])=>pad(n,bl)+id).join('\n');
+    const tl = Object.keys(S.tags).reduce((m,n)=>Math.max(m,n.length),0)+2;
+    $('fTags').textContent = Object.keys(S.tags).length ? Object.entries(S.tags).map(([n,id])=>pad(n,tl)+id).join('\n') : '(empty)';
+    $('fHead').textContent = 'ref: refs/heads/' + S.head;
+
+    // selected
+    const c = S.c[S.sel];
+    if(c){
+      $('selPath').textContent = 'message file of ' + c.id + (R.has(c.id)?'':' · unreachable');
+      const lines = ['tree   ' + h7('tree'+c.id)];
+      c.parents.forEach(p=>lines.push('parent ' + p));
+      lines.push('author You <you@example.com>', 'date   step ' + c.n, '', c.msg);
+      $('fSel').textContent = lines.join('\n');
+      $('selActions').innerHTML = !R.has(c.id) ? `<button class="btn amber" id="bRescue">Name it again</button>` : '';
+      const r = $('bRescue'); if(r) r.addEventListener('click', ()=>rescue(c.id));
+    }
+
+    // selects
+    const others = Object.keys(S.branches);
+    $('swSel').innerHTML = others.map(n=>`<option value="${esc(n)}" ${n===S.head?'selected':''}>${esc(n)}</option>`).join('');
+    const mOpts = others.filter(n=>n!==S.head);
+    $('mergeSel').innerHTML = mOpts.length ? mOpts.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('') : '<option value="">(no other branch)</option>';
+    const solo = !mOpts.length;
+    $('mergeSel').hidden = solo; $('bMerge').hidden = solo; $('bDelete').hidden = solo;
+    $('mergeHint').hidden = !solo;
+    if(delArmed && others.length<2){ delArmed=false; }
+  }
+
+  $('graph').addEventListener('click', e=>{ const g = e.target.closest('.cnode'); if(g){ S.sel = g.dataset.id; render(); }});
+  $('graph').addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ const g = e.target.closest('.cnode'); if(g){ e.preventDefault(); S.sel = g.dataset.id; render(); const ng = $('graph').querySelector(`[data-id="${g.dataset.id}"]`); if(ng) ng.focus(); } }});
+  $('bCommit').addEventListener('click', commit);
+  $('msg').addEventListener('keydown', e=>{ if(e.key==='Enter') commit(); });
+  $('bBranch').addEventListener('click', branch);
+  $('newBranch').addEventListener('keydown', e=>{ if(e.key==='Enter') branch(); });
+  $('bSwitch').addEventListener('click', sw);
+  $('bMerge').addEventListener('click', merge);
+  $('bTag').addEventListener('click', tag);
+  $('tagName').addEventListener('keydown', e=>{ if(e.key==='Enter') tag(); });
+  $('bDelete').addEventListener('click', del);
+  $('bReset').addEventListener('click', ()=>{ delArmed=false; $('bDelete').textContent='Delete current branch…'; reset(); });
+  ['bCommit','bBranch','bSwitch','bMerge','bTag','bReset'].forEach(id=>$(id).addEventListener('click', ()=>{ if(delArmed && id!=='bDelete'){ delArmed=false; $('bDelete').textContent='Delete current branch…'; } }));
+  reset();
+})();
+</script>
+</div>
