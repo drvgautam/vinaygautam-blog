@@ -12,6 +12,25 @@ function formatViews(n: number): string {
   return n.toLocaleString("en-US")
 }
 
+/** Inline eye icon — external <use href="/ui.svg#eye"> often fails to paint inside Solid islands. */
+function EyeIcon() {
+  return (
+    <svg
+      class="size-4 shrink-0"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  )
+}
+
 export default function ViewCount(props: Props) {
   const [views, setViews] = createSignal<number | null>(null)
 
@@ -37,6 +56,8 @@ export default function ViewCount(props: Props) {
               return
             }
           }
+          // 503 / error → do not mark session; hide count
+          return
         }
       }
 
@@ -45,7 +66,7 @@ export default function ViewCount(props: Props) {
       const data = (await res.json()) as Record<string, number>
       if (typeof data[slug] === "number") setViews(data[slug])
     } catch {
-      // Hide count when API/KV is unavailable (local preview, missing binding).
+      // Hide count when API/KV is unavailable.
     }
   })
 
@@ -56,9 +77,7 @@ export default function ViewCount(props: Props) {
         title={`${views()} views`}
         aria-label={`${views()} views`}
       >
-        <svg class="size-4 stroke-current" aria-hidden="true">
-          <use href="/ui.svg#eye" />
-        </svg>
+        <EyeIcon />
         <span>{formatViews(views()!)}</span>
       </span>
     </Show>

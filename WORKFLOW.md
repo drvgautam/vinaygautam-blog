@@ -122,14 +122,19 @@ git log --oneline -10   # Recent commits
 
 Per-post view counts are stored in Workers KV via the Pages Function at `/api/views`.
 
-One-time Cloudflare setup:
+**Required one-time Cloudflare setup** (without this, the eye/count stays hidden and views never increment):
 
-1. In the Cloudflare dashboard, open **Workers & Pages → KV** and create a namespace (e.g. `blog-views`).
-2. Open your **Pages** project → **Settings → Functions → KV namespace bindings**.
-3. Add a binding: variable name `VIEWS`, namespace `blog-views` (Production; add the same for Preview if you use preview deploys).
-4. Redeploy (or push a commit) so the binding is active.
+1. Cloudflare dashboard → **Workers & Pages → KV** → **Create a namespace** (name e.g. `blog-views`).
+2. Open your **Pages** project (the one for `vinaygautam.com`) → **Settings → Functions**.
+3. Under **KV namespace bindings**, click **Add binding**:
+   - Variable name: `VIEWS` (exact spelling)
+   - KV namespace: `blog-views`
+   - Apply to **Production** (and Preview if you use preview deploys)
+4. **Save**, then trigger a new deployment (or push a commit) so the binding is live.
 
-Without the `VIEWS` binding, the API responds but counts stay at `0` / do not persist. Local `astro preview` does not run Pages Functions, so the eye icon stays hidden until the site is on Cloudflare with KV bound.
+Check it worked: open `https://www.vinaygautam.com/api/views?slugs=building-my-homelab` — you should get JSON like `{"building-my-homelab":0}` with status 200. If you get status **503**, the `VIEWS` binding is still missing.
+
+Local testing: `npx wrangler pages dev dist --kv=VIEWS --port=8788` (not plain `astro preview`).
 
 ## Emergency Hotfixes
 

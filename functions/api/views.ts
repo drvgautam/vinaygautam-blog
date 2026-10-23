@@ -23,7 +23,20 @@ function kvKey(slug: string): string {
   return `${KEY_PREFIX}${slug}`
 }
 
+function missingKv(): Response {
+  return json(
+    {
+      error: "View counts unavailable: bind a KV namespace named VIEWS on this Pages project.",
+      available: false,
+    },
+    503
+  )
+}
+
 export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const views = context.env.VIEWS
+  if (!views) return missingKv()
+
   const url = new URL(context.request.url)
   const raw = url.searchParams.get("slugs") || ""
   const slugs = [...new Set(raw.split(",").map((s) => s.trim()).filter(Boolean))].slice(0, MAX_SLUGS)
@@ -37,14 +50,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return json({ error: `Invalid slug: ${invalid}` }, 400)
   }
 
-  const views = context.env.VIEWS
   const result: Record<string, number> = {}
-
-  if (!views) {
-    for (const slug of slugs) result[slug] = 0
-    return json(result)
-  }
-
   await Promise.all(
     slugs.map(async (slug) => {
       const value = await views.get(kvKey(slug))
@@ -56,6 +62,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
+  const views = context.env.VIEWS
+  if (!views) return missingKv()
+
   let body: { slug?: string }
   try {
     body = await context.request.json()
@@ -68,15 +77,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     return json({ error: "Invalid or missing slug" }, 400)
   }
 
-  const views = context.env.VIEWS
-  if (!views) {
-    return json({ slug, views: 0 })
-  }
-
   const key = kvKey(slug)
   const current = Number.parseInt((await views.get(key)) || "0", 10) || 0
   const next = current + 1
   await views.put(key, String(next))
 
-  return json({ slug, views: next })
+  return json({ slug, views: next, available: true })
 }
