@@ -12,6 +12,7 @@
   --f-display:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --f-body:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --f-mono:ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --measure:65ch;
 }
 @media (prefers-color-scheme: dark){ #git-from-scratch:not([data-theme="light"]){
   --paper:transparent; --sheet:transparent; --ink:rgba(255,255,255,.75); --muted:rgba(255,255,255,.55); --rule:rgba(255,255,255,.15);
@@ -42,7 +43,7 @@ html.dark #git-from-scratch h1, html.dark #git-from-scratch h2, html.dark #git-f
 #git-from-scratch .kicker{font-family:var(--f-mono); font-size:0.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
 #git-from-scratch .hero h1{font-size:1.5rem; font-weight:600; letter-spacing:normal}
 #git-from-scratch .hero h1 .dot{color:var(--commit)}
-#git-from-scratch .lede{font-size:1rem; line-height:1.75; max-width:65ch}
+#git-from-scratch .lede{font-size:1rem; line-height:1.75; max-width:var(--measure)}
 #git-from-scratch .legend{display:flex; flex-wrap:wrap; gap:10px 18px; font-family:var(--f-mono); font-size:0.8125rem; color:var(--muted)}
 #git-from-scratch .legend span{display:inline-flex; align-items:center; gap:7px}
 #git-from-scratch .sw{width:12px; height:12px; border-radius:50%; display:inline-block}
@@ -58,13 +59,19 @@ html.dark #git-from-scratch h1, html.dark #git-from-scratch h2, html.dark #git-f
 #git-from-scratch .ch h2{font-size:1.5rem; font-weight:600; letter-spacing:normal}
 #git-from-scratch .ch h3{font-size:1.25rem; font-weight:600}
 #git-from-scratch .problem{font-style:italic; color:var(--muted); font-size:1rem}
-#git-from-scratch .prose{display:grid; gap:1em; max-width:65ch; font-size:1rem; line-height:1.75; min-width:0}
-#git-from-scratch figure{margin:0; background:transparent; border:0; border-radius:0; padding:0.5rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
+#git-from-scratch .ch-head,
+#git-from-scratch .prose,
+#git-from-scratch figure,
+#git-from-scratch .rule,
+#git-from-scratch details.git,
+#git-from-scratch .panel{max-width:var(--measure); width:100%}
+#git-from-scratch .prose{display:grid; gap:1em; font-size:1rem; line-height:1.75; min-width:0}
+#git-from-scratch figure{margin:0; background:transparent; border:0; border-radius:0; padding:0.5rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch}
 #git-from-scratch figure svg{display:block; width:100%; height:auto; min-width:0; max-width:100%}
 #git-from-scratch figcaption{font-family:var(--f-body); font-size:0.875rem; color:var(--muted); margin-top:0.75rem; line-height:1.5}
-#git-from-scratch .rule{border-left:3px solid var(--commit); padding:0.25rem 0 0.25rem 1rem; font-family:var(--f-body); font-size:1.125rem; font-weight:500; line-height:1.5; max-width:60ch}
+#git-from-scratch .rule{border-left:3px solid var(--commit); padding:0.25rem 0 0.25rem 1rem; font-family:var(--f-body); font-size:1.125rem; font-weight:500; line-height:1.5}
 #git-from-scratch .rule small{display:block; font-family:var(--f-mono); font-size:0.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--commit); margin-bottom:4px; font-weight:400}
-#git-from-scratch details.git{background:var(--panel-ink); color:#f9fafb; border-radius:0.5rem; padding:0; max-width:100%}
+#git-from-scratch details.git{background:var(--panel-ink); color:#f9fafb; border-radius:0.5rem; padding:0}
 html.dark #git-from-scratch details.git, .dark #git-from-scratch details.git{background:#e5e7eb; color:#111827}
 #git-from-scratch details.git summary{cursor:pointer; padding:12px 16px; font-family:var(--f-mono); font-size:0.8125rem; list-style:none; display:flex; justify-content:space-between; gap:12px}
 #git-from-scratch details.git summary::-webkit-details-marker{display:none}
@@ -97,7 +104,7 @@ html.dark #git-from-scratch .box, .dark #git-from-scratch .box{fill:#111}
 #git-from-scratch .arrowhead{fill:var(--muted)}
 
 /* interactive panels — light chrome only where interaction needs a surface */
-#git-from-scratch .panel{background:var(--panel); border:0; border-radius:0.5rem; padding:1rem; display:grid; gap:14px; max-width:100%; min-width:0}
+#git-from-scratch .panel{background:var(--panel); border:0; border-radius:0.5rem; padding:1rem; display:grid; gap:14px; min-width:0}
 #git-from-scratch .btn{font-family:var(--f-mono); font-size:13px; padding:7px 12px; border-radius:4px; border:1px solid var(--rule); background:transparent; color:var(--ink); cursor:pointer}
 #git-from-scratch .btn:hover{border-color:var(--ink)}
 #git-from-scratch .btn.primary{background:var(--commit); color:#fff; border-color:var(--commit)}
