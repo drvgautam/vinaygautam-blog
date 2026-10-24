@@ -35,14 +35,13 @@ const items = seriesId
 const index = items.findIndex(x => x.slug === entry.slug)
 const prev = items.length > 1 ? items[(index - 1 + items.length) % items.length] : undefined
 const next = items.length > 1 ? items[(index + 1) % items.length] : undefined
-const isWideInteractive = collection === "blog" && entry.slug === "git-from-scratch"
-const showToc = !isWideInteractive && (headings?.length ?? 0) > 0
+const showToc = (headings?.length ?? 0) > 0
 ---
 
 <div>
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class:list={["flex justify-center min-w-0", isWideInteractive ? "lg:col-span-12" : "lg:col-span-9"]}>
-      <article id="article-root" class:list={["w-full min-w-0 max-w-full", isWideInteractive ? "sm:max-w-[1080px]" : "max-w-[720px]"]}>
+    <div class="lg:col-span-9 flex justify-center min-w-0">
+      <article id="article-root" class="w-full min-w-0 max-w-[720px]">
       {/* Mobile TOC */}
       {showToc && (
         <details class="mb-6 lg:hidden border rounded-lg border-black/15 dark:border-white/20">
