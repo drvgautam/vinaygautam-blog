@@ -12,7 +12,8 @@
   --f-display:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --f-body:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --f-mono:ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --measure:65ch;
+  /* Never wider than the article column; never wider than the viewport. */
+  --measure:min(65ch, 100%);
 }
 @media (prefers-color-scheme: dark){ #git-from-scratch:not([data-theme="light"]){
   --paper:transparent; --sheet:transparent; --ink:rgba(255,255,255,.75); --muted:rgba(255,255,255,.55); --rule:rgba(255,255,255,.15);
@@ -27,9 +28,9 @@
 
 #git-from-scratch,#git-from-scratch *{box-sizing:border-box}
 #git-from-scratch{background:transparent; color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.75;
-  width:100%; max-width:100%; overflow-x:clip; padding:0 0 3rem;}
-#git-from-scratch .wrap{max-width:100%; margin:0 auto; width:100%}
-#git-from-scratch .wide{max-width:100%; margin:0 auto; width:100%}
+  width:100%; max-width:100%; min-width:0; overflow-x:hidden; padding:0 0 3rem;}
+#git-from-scratch .wrap{max-width:100%; margin:0 auto; width:100%; min-width:0}
+#git-from-scratch .wide{max-width:100%; margin:0 auto; width:100%; min-width:0}
 #git-from-scratch h1, #git-from-scratch h2, #git-from-scratch h3{font-family:var(--f-display); line-height:1.25; text-wrap:balance; margin:0; font-weight:600; letter-spacing:normal; color:rgba(0,0,0,.92)}
 html.dark #git-from-scratch h1, html.dark #git-from-scratch h2, html.dark #git-from-scratch h3,
 .dark #git-from-scratch h1, .dark #git-from-scratch h2, .dark #git-from-scratch h3{color:rgba(255,255,255,.92)}
@@ -64,23 +65,23 @@ html.dark #git-from-scratch h1, html.dark #git-from-scratch h2, html.dark #git-f
 #git-from-scratch figure,
 #git-from-scratch .rule,
 #git-from-scratch details.git,
-#git-from-scratch .panel{max-width:var(--measure); width:100%}
-#git-from-scratch .prose{display:grid; gap:1em; font-size:1rem; line-height:1.75; min-width:0}
+#git-from-scratch .panel{max-width:var(--measure); width:100%; min-width:0}
+#git-from-scratch .prose{display:grid; gap:1em; font-size:1rem; line-height:1.75}
 #git-from-scratch figure{margin:0; background:transparent; border:0; border-radius:0; padding:0.5rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch}
-#git-from-scratch figure svg{display:block; width:100%; height:auto; min-width:0; max-width:100%}
+#git-from-scratch figure svg{display:block; width:100%; height:auto; max-width:100%}
 #git-from-scratch figcaption{font-family:var(--f-body); font-size:0.875rem; color:var(--muted); margin-top:0.75rem; line-height:1.5}
 #git-from-scratch .rule{border-left:3px solid var(--commit); padding:0.25rem 0 0.25rem 1rem; font-family:var(--f-body); font-size:1.125rem; font-weight:500; line-height:1.5}
 #git-from-scratch .rule small{display:block; font-family:var(--f-mono); font-size:0.6875rem; letter-spacing:.12em; text-transform:uppercase; color:var(--commit); margin-bottom:4px; font-weight:400}
-#git-from-scratch details.git{background:var(--panel-ink); color:#f9fafb; border-radius:0.5rem; padding:0}
+#git-from-scratch details.git{background:var(--panel-ink); color:#f9fafb; border-radius:0.5rem; padding:0; overflow:hidden}
 html.dark #git-from-scratch details.git, .dark #git-from-scratch details.git{background:#e5e7eb; color:#111827}
 #git-from-scratch details.git summary{cursor:pointer; padding:12px 16px; font-family:var(--f-mono); font-size:0.8125rem; list-style:none; display:flex; justify-content:space-between; gap:12px}
 #git-from-scratch details.git summary::-webkit-details-marker{display:none}
 #git-from-scratch details.git summary::after{content:"show"; opacity:.6}
 #git-from-scratch details.git[open] summary::after{content:"hide"}
-#git-from-scratch .git-body{padding:0 16px 16px; display:grid; gap:10px; font-size:1rem}
-#git-from-scratch .git-body pre{margin:0; font-family:var(--f-mono); font-size:0.875rem; line-height:1.6; overflow-x:auto; white-space:pre; max-width:100%}
+#git-from-scratch .git-body{padding:0 16px 16px; display:grid; gap:10px; font-size:1rem; min-width:0; max-width:100%}
+#git-from-scratch .git-body pre{margin:0; font-family:var(--f-mono); font-size:0.8125rem; line-height:1.6; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:pre; max-width:100%}
 #git-from-scratch .git-body .c{opacity:.6}
-#git-from-scratch .git-body p{font-family:var(--f-body); opacity:.9}
+#git-from-scratch .git-body p{font-family:var(--f-body); opacity:.9; overflow-wrap:anywhere}
 
 /* svg classes */
 #git-from-scratch .ln{stroke:var(--muted); stroke-width:1.6; fill:none}
@@ -128,8 +129,8 @@ html.dark #git-from-scratch .box, .dark #git-from-scratch .box{fill:#111}
 #git-from-scratch .ver{padding:2px 7px; border-radius:10px; background:transparent; border:1px solid var(--rule)}
 #git-from-scratch .ver.diff{border-color:var(--branch); background:var(--branch-soft)}
 #git-from-scratch .status{font-size:12px; color:var(--muted)}
-#git-from-scratch .scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%}
-#git-from-scratch .stage-wrap{min-width:min(560px, 100%)}
+#git-from-scratch .scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch; width:100%; max-width:100%; min-width:0}
+#git-from-scratch .stage-wrap{min-width:560px}
 #git-from-scratch .note{font-family:var(--f-mono); font-size:13px; padding:10px 12px; border-radius:0.5rem; background:var(--panel); border:0; min-height:42px}
 #git-from-scratch .note b{color:var(--commit)}
 #git-from-scratch .note .cmd{color:var(--branch)}
@@ -140,9 +141,9 @@ html.dark #git-from-scratch .box, .dark #git-from-scratch .box{fill:#111}
 #git-from-scratch .bench-intro h2{font-size:1.5rem; font-weight:600; letter-spacing:normal}
 #git-from-scratch .bench-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,240px); gap:14px; min-width:0}
 @media (max-width:720px){ #git-from-scratch .bench-grid{grid-template-columns:minmax(0,1fr)} }
-#git-from-scratch .graph{background:var(--panel); border:0; border-radius:0.5rem; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-block:6px; max-width:100%}
+#git-from-scratch .graph{background:var(--panel); border:0; border-radius:0.5rem; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-block:6px; width:100%; max-width:100%; min-width:0}
 #git-from-scratch .hint{font-family:var(--f-mono); font-size:12.5px; color:var(--muted)}
-#git-from-scratch .graph svg{display:block; max-width:none}
+#git-from-scratch .graph svg{display:block; max-width:none; height:auto}
 #git-from-scratch .side{display:grid; gap:12px; align-content:start; min-width:0}
 #git-from-scratch .file{background:var(--panel); border:0; border-radius:0.5rem; padding:12px 14px; min-width:0}
 #git-from-scratch .file pre{margin:6px 0 0; font-family:var(--f-mono); font-size:12.5px; line-height:1.6; white-space:pre-wrap; word-break:break-word}
@@ -160,11 +161,13 @@ html.dark #git-from-scratch .box, .dark #git-from-scratch .box{fill:#111}
 #git-from-scratch td code{color:var(--commit); white-space:nowrap}
 #git-from-scratch tr:last-child td{border-bottom:0}
 #git-from-scratch footer{padding-top:40px; font-family:var(--f-mono); font-size:12px; color:var(--muted)}
+/* Phone: use full column width; keep diagrams readable via horizontal scroll. */
 @media (max-width:640px){
-  #git-from-scratch{font-size:16px}
+  #git-from-scratch{--measure:100%; font-size:16px}
   #git-from-scratch .ch h2, #git-from-scratch .bench-intro h2{font-size:1.25rem}
   #git-from-scratch .toc{grid-template-columns:1fr}
-  #git-from-scratch .stage-wrap{min-width:480px}
+  #git-from-scratch figure svg{width:max(100%, 560px); max-width:none}
+  #git-from-scratch .graph svg{width:560px; max-width:none}
   #git-from-scratch table{min-width:480px}
 }
 @media (prefers-reduced-motion: reduce){ #git-from-scratch,#git-from-scratch *{transition:none!important; animation:none!important} }
