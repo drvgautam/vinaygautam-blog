@@ -1,30 +1,54 @@
 ---
-title: "How LLMs work: inside the next token"
-summary: "A six-part series that follows one sentence through tokenization, embeddings, attention, the transformer stack, and next-token prediction — with an interactive overview you can click through first."
+title: "A primer on AI engineering"
+summary: "Short, runnable guides for software engineers who use LLM APIs but have never trained a model: how LLMs work, then how they are trained, aligned, served and turned into products."
 date: 2026-10-16
 tags:
+  - AI engineering
   - LLM
-  - How LLMs work
   - machine learning
 draft: false
-series: how-llms-work
-seriesOrder: 0
-seriesTitle: "How LLMs work"
 ---
 
 import InsideNextTokenStory from "@components/llm-guides/InsideNextTokenStory.astro"
 
-This series opens a large language model along one running sentence — *The cat sat on the* — and shows what has to happen before the next token appears. Start with the interactive overview below, then read each guide in order.
+*This post used to introduce a six-part series on how LLMs work. That series has grown into a standalone project, and this post now describes it.*
+
+[A Primer on AI Engineering](https://drvgautam.github.io/primer-on-aiengineering/) is a set of short, worked guides to how large language models work and how they become products. It starts from a single neuron and builds up from there. Every number in the text comes from code you can run.
+
+## Why I wrote it
+
+Most engineers I work with use LLMs every day through an API. You send a prompt, a response streams back, and the model in between stays a black box. That is fine until something goes wrong: a tokenizer splits a word in a strange way, a temperature setting makes outputs drift, a fine-tune doesn't take, or a retrieval pipeline returns the right documents and the model still ignores them. Debugging any of these means knowing what happens inside.
+
+The material that explains it tends to fall into two groups. Papers assume you already know the field. Tutorials skip the parts that matter once you are building something. I wanted something in between: written for a software engineer who has used LLM APIs but never trained a model, short enough to read in an evening, and specific enough that you could rebuild each idea yourself.
+
+## What it covers
+
+The primer has two parts.
+
+**Part 1, How LLMs work**, takes a language model apart one layer at a time. It starts with what a neural network is and how it learns, then follows text as it becomes tokens and vectors, as tokens attend to each other, and as the transformer stack turns all of that into a probability for every possible next token. It ends where a model actually produces text.
+
+**Part 2, Lifecycle**, follows a model from raw text to a working product: pre-training, fine-tuning, alignment, inference and serving, tool use and agents, and retrieval-augmented generation. Four of its six guides are out, and the rest are on the way.
+
+## How it is built
+
+The way the primer is put together matters as much as what it says.
+
+- **One running example.** Every guide uses the same sentence, *The cat sat on the*. Each new idea appears on text you already know, so you can watch that sentence turn into token IDs, then vectors, then attention weights, then a next-token distribution.
+- **Numbers you can reproduce.** Every code block runs on a laptop CPU. Its printed output is pasted from a real run, and CI re-runs each notebook against the text, so the prose and the code can't quietly drift apart.
+- **A notebook per guide.** Each guide has a matching Jupyter notebook that runs locally or in Colab.
+- **A book as well as a site.** All guides are also collected in one PDF, with each figure drawn step by step.
+- **Open.** The text is licensed CC BY 4.0, and corrections are tracked as GitHub issues.
+
+## A taste of Part 1
+
+The interactive overview below follows *The cat sat on the* through the model to its next token. The primer covers each of its steps in depth.
 
 <InsideNextTokenStory />
 
-## The six guides
+## Start reading
 
-1. **[Neural networks: a function with knobs](/blog/how-llms-work/01-neural-networks)** — neurons, forward passes, and backpropagation.
-2. **[Tokenization: how text becomes numbers](/blog/how-llms-work/02-tokenization)** — tokens, vocabularies, and GPT-2’s tokenizer.
-3. **[Embeddings: giving every token a vector](/blog/how-llms-work/03-embeddings)** — lookup tables and position vectors.
-4. **[Attention: letting tokens look at each other](/blog/how-llms-work/04-attention)** — weighted context and the causal mask.
-5. **[The transformer: blocks, stacks and a model that works](/blog/how-llms-work/05-transformer)** — assembling the stack and counting parameters.
-6. **[Next-token prediction: from probabilities to text](/blog/how-llms-work/06-next-token)** — logits, softmax, temperature, top-k and top-p.
+- [Read online](https://drvgautam.github.io/primer-on-aiengineering/), starting with the first guide and following the sidebar in order. Each guide builds on the ones before it.
+- [Download the PDF](https://drvgautam.github.io/primer-on-aiengineering/primer-on-aiengineering.pdf) if you would rather read it as a book.
+- [Run the notebooks](https://github.com/drvgautam/primer-on-aiengineering/tree/main/code/notebooks) alongside the text.
 
-Read them in order: each guide assumes the ones before it.
+If something is wrong, or a number doesn't reproduce on your machine, please [open an issue](https://github.com/drvgautam/primer-on-aiengineering/issues/new/choose). I'd like to hear about it.

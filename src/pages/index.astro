@@ -52,7 +52,7 @@ const linkedIn = SOCIALS.find((s) => s.NAME === "LinkedIn")?.HREF ?? "https://ww
                   <div class="flex-1 min-w-0">
                     <div class="flex flex-wrap items-center gap-2 mb-3">
                       <span class="inline-block text-[11px] font-medium px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
-                        {post.data.seriesTitle === "How LLMs work" ? "LLMs, explained" : (post.data.tags?.[0] ?? "Blog")}
+                        {post.data.tags?.[0] ?? "Blog"}
                       </span>
                       <span class="text-xs text-gray-500 dark:text-gray-400">
                         {post.data.date.toLocaleDateString("en-GB", {

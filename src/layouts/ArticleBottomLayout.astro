@@ -1,7 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content"
 import { SITE, SOCIALS } from "@consts"
-import { formatDate } from "@lib/utils"
+import { formatDate, isListedBlogPost } from "@lib/utils"
 import Comments from "@components/Comments.astro"
 
 type Props = {
@@ -31,7 +31,9 @@ const items = seriesId
         const bo = (b.data as { seriesOrder?: number }).seriesOrder ?? 0
         return ao - bo
       })
-  : allItems.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  : allItems
+      .filter((post) => collection !== "blog" || isListedBlogPost(post as CollectionEntry<"blog">))
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 const index = items.findIndex(x => x.slug === entry.slug)
 const prev = items.length > 1 ? items[(index - 1 + items.length) % items.length] : undefined
 const next = items.length > 1 ? items[(index + 1) % items.length] : undefined
