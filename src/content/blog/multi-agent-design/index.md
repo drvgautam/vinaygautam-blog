@@ -67,7 +67,7 @@ They could run in parallel. They don't, on purpose. Two editors reading the same
 What this costs is time. Across the twelve guides the records show about 200 editor rounds, every one of them waiting for the one before. I didn't track the hours or the bill, which I now think was a mistake, because the question "is the eleventh editor worth it?" can only be answered with those numbers, and I can't answer it.
 
 <figure class="diagram-fit">
-  <img src="/blog/multi-agent-design/multi-agent-design-fig1.svg" alt="Five workflow patterns, and the three this system uses" width="680" height="980" />
+  <img src="/blog/multi-agent-design/multi-agent-design-fig1.svg?v=2" alt="Five workflow patterns, and the three this system uses" width="680" height="980" />
   <figcaption>The five patterns Anthropic describes. [2] This system is a chain of stages, each stage a loop between writer and editor, all of it run by one writer that starts the editors as workers. The roster is fixed in a file. Nothing is routed and nothing runs in parallel.</figcaption>
 </figure>
 
@@ -86,7 +86,7 @@ Three rounds is a limit, and the records are honest about it: when an editor is 
 The leak I didn't expect is quieter. Twice, an editor was satisfied on its third round but left a few small findings. The writer applied them. And the revised text was never sent back, because the rounds were used up. So the verdict on file describes a draft that no longer exists. The fix is a rule: a change goes back to the editor that asked for it, and if there are no rounds left, the summary says "applied, unconfirmed." I haven't written that rule yet. I'm telling you so you don't assume I have.
 
 <figure class="diagram-fit">
-  <img src="/blog/multi-agent-design/multi-agent-design-fig2.svg" alt="How each guide moves through review" width="680" height="1080" />
+  <img src="/blog/multi-agent-design/multi-agent-design-fig2.svg?v=2" alt="How each guide moves through review" width="680" height="1080" />
   <figcaption>One writer, eleven cold editors, two script gates, two decisions that are mine, and the files that remember things between guides.</figcaption>
 </figure>
 
