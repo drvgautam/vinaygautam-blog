@@ -62,23 +62,19 @@ The editors run one after another, in a fixed order, and the order is the design
 
 Substance comes first: code, accuracy, currency, misconceptions, completeness. Then the line editors. Then figures. Then the script again. Then the three series editors. The reason is simple once you see it. There's no point polishing the rhythm of a sentence the accuracy editor is about to delete. Fix what is said before how it's said.
 
-They could run in parallel. They don't, on purpose. Two editors reading the same paragraph at once will sometimes ask for opposite fixes, one wanting a caveat added and the other wanting the paragraph cut. In sequence, the second editor sees the first one's fix. And the ownership rule only works if each editor reads a draft already clean of the problems earlier editors own.
+They could run in parallel. They don't, on purpose, and Figure 1 shows which of the standard patterns this system does and doesn't use. Two editors reading the same paragraph at once will sometimes ask for opposite fixes, one wanting a caveat added and the other wanting the paragraph cut. In sequence, the second editor sees the first one's fix. And the ownership rule only works if each editor reads a draft already clean of the problems earlier editors own.
 
 What this costs is time. Across the twelve guides the records show about 200 editor rounds, every one of them waiting for the one before. I didn't track the hours or the bill, which I now think was a mistake, because the question "is the eleventh editor worth it?" can only be answered with those numbers, and I can't answer it.
 
-<figure class="diagram-expand">
-  <img src="/blog/multi-agent-design/multi-agent-design-fig1.svg?v=3" alt="Five workflow patterns, and the three this system uses" width="2400" height="1110" />
-  <div class="diagram-expand__actions">
-    <button type="button" data-diagram-expand>Expand diagram</button>
-  </div>
-  <figcaption>The five patterns Anthropic describes. [2] This system is a chain of stages, each stage a loop between writer and editor, all of it run by one writer that starts the editors as workers. The roster is fixed in a file. Nothing is routed and nothing runs in parallel. Click the figure to read it at full size.</figcaption>
-</figure>
+![Five workflow patterns, and the three this system uses](/blog/multi-agent-design/multi-agent-design-fig1.svg?v=4)
+
+*Figure 1. The five patterns Anthropic describes. [2] This system is a chain of stages, each stage a loop between writer and editor, all of it run by one writer that starts the editors as workers. The roster is fixed in a file. Nothing is routed and nothing runs in parallel.*
 
 ## The loop, and where it leaks
 
 Each editor returns a verdict and up to ten findings, ranked high, medium or low. The writer fixes what it accepts, logs what it rejects and why, and sends the draft back. The loop ends when the editor says it's satisfied, meaning no high findings and at most two medium, or after three rounds.
 
-Every number in that rule is a leak, and I want to name them, because a diagram of this system looks much tighter than the system is.
+Every number in that rule is a leak, and I want to name them, because Figure 2 looks much tighter than the system is.
 
 Two medium findings may stand at each of eleven editors. So a guide can pass with twenty-odd known weaknesses, each minor on its own, and nobody looks at them together until the end.
 
@@ -88,13 +84,9 @@ Three rounds is a limit, and the records are honest about it: when an editor is 
 
 The leak I didn't expect is quieter. Twice, an editor was satisfied on its third round but left a few small findings. The writer applied them. And the revised text was never sent back, because the rounds were used up. So the verdict on file describes a draft that no longer exists. The fix is a rule: a change goes back to the editor that asked for it, and if there are no rounds left, the summary says "applied, unconfirmed." I haven't written that rule yet. I'm telling you so you don't assume I have.
 
-<figure class="diagram-expand">
-  <img src="/blog/multi-agent-design/multi-agent-design-fig2.svg?v=3" alt="How each guide moves through review" width="2000" height="1800" />
-  <div class="diagram-expand__actions">
-    <button type="button" data-diagram-expand>Expand diagram</button>
-  </div>
-  <figcaption>One writer, eleven cold editors, two script gates, two decisions that are mine, and the files that remember things between guides. Click the figure to read it at full size.</figcaption>
-</figure>
+![How each guide moves through review](/blog/multi-agent-design/multi-agent-design-fig2.svg?v=4)
+
+*Figure 2. One writer, eleven cold editors, two script gates, two decisions that are mine, and the files that remember things between guides.*
 
 ## What enforces this
 
@@ -122,9 +114,15 @@ It's also the one check that's purely mine, and here's a gap I only noticed whil
 
 The second time is the end. The writer produces a table: every editor, how many rounds, its final verdict, every finding still open. Then it stops. Its instructions say it never marks a guide as shipped. That's my job, and it's only as good as the table. Everything unresolved has to be in it.
 
+Figure 3 is the whole path, now that every box on it has been explained. The review loop in the middle is Figure 2. Figure 3 adds what sits on either side of it: the files the writer reads before it drafts, and what happens after I sign off.
+
+![How the agentic writer works](/blog/multi-agent-design/agentic-writer-workflow-column.svg?v=4)
+
+*Figure 3. One guide, start to finish. The two places I appear are the approval pill in the writer band and the dark box in the last band. Release, the box beside it, is outside this essay.*
+
 ## What the records show
 
-Across the twelve guides there were 131 first-round reviews. (Eleven editors times twelve guides is 132; the missing one is Guide 1's figures review, skipped because I didn't have the dev server running, and the summary says so.) Of those, 77 were satisfied on the first read and 54 were not.
+That's one guide: one brief, one draft, eleven editors, one sign-off. Across the twelve guides there were 131 first-round reviews. (Eleven editors times twelve guides is 132; the missing one is Guide 1's figures review, skipped because I didn't have the dev server running, and the summary says so.) Of those, 77 were satisfied on the first read and 54 were not.
 
 I want to be careful about what that proves. It proves the editors found things and the writer acted on them. It doesn't tell you how many of the accepted findings were right, how many real errors got through, or whether eleven editors beat one. The pre-training example at the top shows the correction path working once. It doesn't tell you how often.
 
@@ -136,7 +134,7 @@ This is where the shared-blind-spot problem comes back. Every editor runs on the
 
 For facts, though, the stronger check isn't another model. It's getting closer to the source: run the code, open the paper, compare the sentence to the passage it cites. And for whether the guide teaches, the stronger check isn't a model playing a beginner. It's a beginner. A model pretending not to know something can flag a gap. It can't tell you that someone understood.
 
-The experiment I haven't run is small. Take a few passages. Review them three ways: not at all, with one broad reviewer, with the full pipeline. Have someone independent count the real errors before and after, including the ones the fixes introduced. Count the hours. Until I do that, what I have is a record of a process and the changes it made, not a measured error rate. I'd rather say that than let the diagram say otherwise.
+The experiment I haven't run is small. Take a few passages. Review them three ways: not at all, with one broad reviewer, with the full pipeline. Have someone independent count the real errors before and after, including the ones the fixes introduced. Count the hours. Until I do that, what I have is a record of a process and the changes it made, not a measured error rate. I'd rather say that than let Figure 2 say otherwise.
 
 ## What I'd tell you to do
 
