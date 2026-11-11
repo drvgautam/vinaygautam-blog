@@ -111,25 +111,111 @@ article img {
   margin: 0 auto;
 }
 
-/* Column-fitted diagrams: full width, no horizontal scroll */
-article .diagram-fit {
+/* Full diagrams: preview in-column, expand for readable detail */
+article .diagram-expand {
   margin: 1.25rem 0;
   max-width: 100%;
 }
 
-article .diagram-fit img {
+article .diagram-expand img {
   padding: 0;
   margin: 0;
   width: 100%;
   height: auto;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.5rem;
+  background: #fff;
 }
 
-article .diagram-fit figcaption {
+.dark article .diagram-expand img {
+  border-color: rgb(51 65 85);
+}
+
+article .diagram-expand__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+article .diagram-expand__actions button {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgb(37 99 235);
+  background: transparent;
+  border: 0;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.dark article .diagram-expand__actions button {
+  color: rgb(147 197 253);
+}
+
+article .diagram-expand figcaption {
   margin-top: 0.75rem;
   font-size: 0.875em;
   font-style: italic;
   color: inherit;
   opacity: 0.85;
+}
+
+.diagram-expand-dialog {
+  width: min(96vw, 1600px);
+  max-width: 96vw;
+  height: min(92vh, 1000px);
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid rgb(203 213 225);
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #0f172a;
+}
+
+.diagram-expand-dialog::backdrop {
+  background: rgb(15 23 42 / 0.55);
+}
+
+.diagram-expand-dialog__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgb(226 232 240);
+}
+
+.diagram-expand-dialog__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.diagram-expand-dialog__close {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgb(203 213 225);
+  background: #fff;
+  cursor: pointer;
+}
+
+.diagram-expand-dialog__body {
+  height: calc(100% - 3rem);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;
+  background: #f8fafc;
+}
+
+.diagram-expand-dialog__body img {
+  display: block;
+  width: max(100%, 1400px);
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+  background: #fff;
 }
 
 /**
