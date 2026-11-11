@@ -31,6 +31,13 @@ function EyeIcon() {
   )
 }
 
+async function fetchCount(slug: string): Promise<number | null> {
+  const res = await fetch(`/api/views?slugs=${encodeURIComponent(slug)}`)
+  if (!res.ok) return null
+  const data = (await res.json()) as Record<string, number>
+  return typeof data[slug] === "number" ? data[slug] : null
+}
+
 export default function ViewCount(props: Props) {
   const [views, setViews] = createSignal<number | null>(null)
 
@@ -39,32 +46,27 @@ export default function ViewCount(props: Props) {
     if (!slug) return
 
     try {
-      if (props.increment) {
-        const key = sessionKey(slug)
-        const already = sessionStorage.getItem(key)
-        if (!already) {
-          const res = await fetch("/api/views", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ slug }),
-          })
-          if (res.ok) {
-            const data = (await res.json()) as { views?: number }
-            if (typeof data.views === "number") {
-              sessionStorage.setItem(key, "1")
-              setViews(data.views)
-              return
-            }
-          }
-          // 503 / error → do not mark session; hide count
-          return
-        }
-      }
+      // Always load the current count so a refresh still shows (and updates) the number.
+      const current = await fetchCount(slug)
+      if (current !== null) setViews(current)
 
-      const res = await fetch(`/api/views?slugs=${encodeURIComponent(slug)}`)
+      if (!props.increment) return
+
+      const key = sessionKey(slug)
+      if (sessionStorage.getItem(key)) return
+
+      const res = await fetch("/api/views", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
+      })
       if (!res.ok) return
-      const data = (await res.json()) as Record<string, number>
-      if (typeof data[slug] === "number") setViews(data[slug])
+
+      const data = (await res.json()) as { views?: number }
+      if (typeof data.views === "number") {
+        sessionStorage.setItem(key, "1")
+        setViews(data.views)
+      }
     } catch {
       // Hide count when API/KV is unavailable.
     }
