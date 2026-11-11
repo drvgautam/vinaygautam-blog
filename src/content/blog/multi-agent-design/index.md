@@ -151,5 +151,3 @@ The thing I keep coming back to is that the review process itself needed review,
 [1] Brown, T. B., et al. (2020). *Language models are few-shot learners.* Table 2.1 gives the 3.2M-token batch and 300B training tokens; Appendix B describes the batch-size ramp. https://arxiv.org/abs/2005.14165
 
 [2] Schluntz and Zhang, *Building effective agents*, Anthropic, December 2024. https://www.anthropic.com/research/building-effective-agents. The editors run as Claude Code subagents: https://code.claude.com/docs/en/sub-agents
-
-A companion piece, *One writer, eleven critics*, goes through what this system got wrong in more detail.
