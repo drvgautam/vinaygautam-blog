@@ -111,6 +111,30 @@ article img {
   margin: 0 auto;
 }
 
+/* Dense diagrams: keep a readable width and scroll on narrow viewports */
+article .diagram-scroll {
+  margin: 1.25rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+article .diagram-scroll img {
+  padding: 0;
+  margin: 0;
+  width: 1600px;
+  max-width: none;
+  height: auto;
+}
+
+article .diagram-scroll figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.875em;
+  font-style: italic;
+  color: inherit;
+  opacity: 0.85;
+}
+
 /**
  * TWINKLE STARS
  */
